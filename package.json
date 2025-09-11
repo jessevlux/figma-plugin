@@ -1,0 +1,13 @@
+{
+"name": "boilerplate-wireframer",
+"version": "0.1.0",
+"private": true,
+"scripts": {
+"build": "esbuild src/code.ts --bundle --outfile=dist/code.js --format=cjs --platform=node --target=es2019 --external:figma"
+},
+"devDependencies": {
+"esbuild": "^0.23.0",
+"typescript": "^5.5.0"
+}
+}
+

@@ -1,0 +1,27 @@
+<html>
+  <body style="margin: 16px; font-family: Arial, sans-serif">
+    <h3>Wireframe generator</h3>
+    <textarea
+      id="input"
+      rows="16"
+      cols="60"
+      placeholder="Plak JSON hier"
+    ></textarea>
+    <br /><br />
+    <button id="go">Generate</button>
+    <script>
+      document.getElementById("go").onclick = () => {
+        const val = document.getElementById("input").value;
+        try {
+          const payload = JSON.parse(val);
+          parent.postMessage(
+            { pluginMessage: { type: "generate", payload } },
+            "*"
+          );
+        } catch (e) {
+          alert("JSON ongeldig");
+        }
+      };
+    </script>
+  </body>
+</html>
