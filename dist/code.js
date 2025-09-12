@@ -1,5 +1,5 @@
 // UI openen
-figma.showUI(__html__, { width: 520, height: 420 });
+figma.showUI(__html__, { width: 600, height: 450 });
 
 // Mapping: bloknaam -> componentKey
 const mapping = {
@@ -21,11 +21,11 @@ function getOrCreateStackFrame() {
     frame.x = 0;
     frame.y = 0;
     frame.layoutMode = "VERTICAL";
-    frame.primaryAxisSizingMode = "AUTO";   // hoogte automatisch
-    frame.counterAxisSizingMode = "AUTO";   // breedte automatisch
-    frame.itemSpacing = 0;                  // blokken tegen elkaar
+    frame.primaryAxisSizingMode = "AUTO";
+    frame.counterAxisSizingMode = "AUTO";
+    frame.itemSpacing = 0;
     frame.paddingTop = frame.paddingRight = frame.paddingBottom = frame.paddingLeft = 0;
-    frame.counterAxisAlignItems = "MIN";    // geen STRETCH → geldig
+    frame.counterAxisAlignItems = "MIN";
     frame.fills = [];
     figma.currentPage.appendChild(frame);
   }
@@ -36,10 +36,7 @@ function getOrCreateStackFrame() {
 figma.ui.onmessage = async (msg) => {
   if (msg.type === "generate") {
     try {
-      // schoonmaken voordat we parsen
-      const cleaned = msg.json.trim()
-        .replace(/\u00A0/g, " ")   // non-breaking spaces → gewone spaties
-        .replace(/\r\n/g, "\n");
+      const cleaned = msg.json.trim().replace(/\u00A0/g, " ").replace(/\r\n/g, "\n");
       const data = JSON.parse(cleaned);
 
       const blocks = Array.isArray(data) ? data : [data];
@@ -54,12 +51,45 @@ figma.ui.onmessage = async (msg) => {
           figma.notify(`Onbekend blok: ${name}`);
           continue;
         }
+
         try {
           const comp = await figma.importComponentByKeyAsync(key);
           const instance = comp.createInstance();
           instance.name = `[WF] ${name}`;
-          instance.layoutAlign = "STRETCH"; // dit mag wel bij instances
+          instance.layoutAlign = "STRETCH";
           stack.appendChild(instance);
+
+          // === DEBUG: log alle beschikbare property keys ===
+          console.log(`🔑 Properties voor ${name}:`, instance.componentProperties);
+
+          // === Properties van het blok zelf ===
+          if (block.props && typeof block.props === "object") {
+            try {
+              instance.setProperties(block.props);
+              console.log("✅ Props gezet op", name, block.props);
+            } catch (e) {
+              console.warn("⚠️ Kon properties niet instellen voor", name, e);
+            }
+          }
+
+          // === Properties van nested children ===
+          if (block.children && typeof block.children === "object") {
+            for (const childName in block.children) {
+              const child = instance.findOne(n => n.type === "INSTANCE" && n.name === childName);
+              if (child) {
+                console.log(`🔑 Properties voor child ${childName}:`, child.componentProperties);
+                try {
+                  child.setProperties(block.children[childName]);
+                  console.log(`✅ Props gezet op child ${childName}:`, block.children[childName]);
+                } catch (e) {
+                  console.warn(`⚠️ Kon properties niet instellen voor child ${childName}`, e);
+                }
+              } else {
+                console.warn(`⚠️ Child niet gevonden: ${childName}`);
+              }
+            }
+          }
+
           placed++;
         } catch (e) {
           console.error(`Kon component niet importeren: ${name}`, e);

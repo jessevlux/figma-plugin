@@ -10,7 +10,7 @@
         padding: 20px;
         background: #1e1e1e;
         color: #e0e0e0;
-        overflow: hidden; /* geen scrollbars */
+        overflow: hidden;
       }
       h3 {
         margin: 0 0 16px;
@@ -20,7 +20,7 @@
       }
       textarea {
         width: 100%;
-        height: 240px;
+        height: 280px;
         box-sizing: border-box;
         font-family: ui-monospace, monospace;
         font-size: 13px;
@@ -29,7 +29,7 @@
         border: 1px solid #3c3c3c;
         border-radius: 8px;
         padding: 12px;
-        resize: none; /* vast formaat */
+        resize: none;
         outline: none;
       }
       .row {
@@ -71,25 +71,32 @@
 
     <div class="row">
       <button id="generate">Generate</button>
+      <button id="example">Voorbeeld</button>
       <button id="clear">Verwijder blokken</button>
     </div>
 
     <div class="hint">
-      Voorbeeld JSON:
-      <code>[{ "component": "Hero" }, { "component": "Grid" }]</code>
+      Gebruik de <strong>Voorbeeld</strong>-knop om JSON te laden.
     </div>
 
     <script>
       const textarea = document.getElementById("jsonInput");
 
-      // voorbeeld JSON automatisch en correct invullen
       const exampleData = [
-        { component: "Hero" },
-        { component: "Grid" },
-        { component: "Kolommen" },
-        { component: "Media" },
+        {
+          component: "Hero",
+          props: {
+            Title: "Welkom bij onze site",
+            Description: "Introductietekst",
+            "Has Button Primary": true,
+            "Has Button Secondary": false,
+          },
+          children: {
+            "Button Primary": { Label: "Nu starten" },
+            "Button Secondary": { Label: "Meer info" },
+          },
+        },
       ];
-      textarea.value = JSON.stringify(exampleData, null, 2);
 
       document.getElementById("generate").onclick = () => {
         parent.postMessage(
@@ -97,6 +104,11 @@
           "*"
         );
       };
+
+      document.getElementById("example").onclick = () => {
+        textarea.value = JSON.stringify(exampleData, null, 2);
+      };
+
       document.getElementById("clear").onclick = () => {
         parent.postMessage({ pluginMessage: { type: "clear-page" } }, "*");
       };
