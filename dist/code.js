@@ -1,115 +1,109 @@
-// UI openen
-figma.showUI(__html__, { width: 600, height: 450 });
-
-// Mapping: bloknaam -> componentKey
+// Mapping van bloknamen naar componentKeys
 const mapping = {
-  "Hero":     "2449dedf70df67b9d393e89e59f0a3c72e4115ea",
-  "Grid":     "18ab99bd1d0e9c02a53d23fa60d5502e84c9a840",
-  "Kolommen": "d91236c18c35f73c5ccf355fe1dd08f07438de95",
-  "Media":    "4309d59db19c74579c75fd1860b42b31cbb93a4f"
+  Hero: "efeb972be21d10bf3c44bece38dd603531e10d5f",
+  Grid: "18ab99bd1d0e9c02a53d23fa60d5502e84c9a840",
+  Kolommen: "d91236c18c35f73c5ccf355fe1dd08f07438de95",
+  Media: "4309d59db19c74579c75fd1860b42b31cbb93a4f"
 };
 
-// Helper: frame voor Auto Layout
-function getOrCreateStackFrame() {
-  const name = "[WF] Stack";
-  let frame = figma.currentPage.findOne(
-    n => n.type === "FRAME" && n.name === name
-  );
-  if (!frame) {
-    frame = figma.createFrame();
-    frame.name = name;
-    frame.x = 0;
-    frame.y = 0;
-    frame.layoutMode = "VERTICAL";
-    frame.primaryAxisSizingMode = "AUTO";
-    frame.counterAxisSizingMode = "AUTO";
-    frame.itemSpacing = 0;
-    frame.paddingTop = frame.paddingRight = frame.paddingBottom = frame.paddingLeft = 0;
-    frame.counterAxisAlignItems = "MIN";
-    frame.fills = [];
-    figma.currentPage.appendChild(frame);
-  }
-  return frame;
-}
+figma.showUI(__html__, { width: 600, height: 500 });
 
-// Messages uit de UI
 figma.ui.onmessage = async (msg) => {
-  if (msg.type === "generate") {
+  if (msg.type === "generate-wireframe") {
     try {
-      const cleaned = msg.json.trim().replace(/\u00A0/g, " ").replace(/\r\n/g, "\n");
-      const data = JSON.parse(cleaned);
+      const blocks = JSON.parse(msg.json);
 
-      const blocks = Array.isArray(data) ? data : [data];
-      const stack = getOrCreateStackFrame();
+      // Maak container frame met auto-layout
+      const container = figma.createFrame();
+      container.layoutMode = "VERTICAL";
+      container.primaryAxisSizingMode = "AUTO";
+      container.counterAxisSizingMode = "AUTO";
+      container.itemSpacing = 16;
+      container.name = "Wireframe";
 
-      let placed = 0;
-      for (const block of blocks) {
-        const name = (block && typeof block === "object") ? block.component : null;
-        if (!name) continue;
-        const key = mapping[name];
-        if (!key) {
-          figma.notify(`Onbekend blok: ${name}`);
-          continue;
+  for (const block of blocks) {
+    const key = mapping[block.component];
+    if (!key) {
+      console.warn(`Geen key gevonden voor component: ${block.component}`);
+      continue;
+    }
+
+    const comp = await figma.importComponentByKeyAsync(key);
+    const instance = comp.createInstance();
+
+    // Props proberen te zetten (naam->ID mapping ondersteunen)
+    if (block.props) {
+      try {
+        const defs = (comp && comp.componentPropertyDefinitions) || {};
+        // mapping: zichtbare naam -> propertyId en set van geldige IDs
+        const nameToId = {};
+        const validIds = new Set();
+        for (const [propId, def] of Object.entries(defs)) {
+          validIds.add(propId);
+          if (def && def.name) nameToId[def.name] = propId;
         }
 
-        try {
-          const comp = await figma.importComponentByKeyAsync(key);
-          const instance = comp.createInstance();
-          instance.name = `[WF] ${name}`;
-          instance.layoutAlign = "STRETCH";
-          stack.appendChild(instance);
-
-          // === DEBUG: log alle beschikbare property keys ===
-          console.log(`🔑 Properties voor ${name}:`, instance.componentProperties);
-
-          // === Properties van het blok zelf ===
-          if (block.props && typeof block.props === "object") {
-            try {
-              instance.setProperties(block.props);
-              console.log("✅ Props gezet op", name, block.props);
-            } catch (e) {
-              console.warn("⚠️ Kon properties niet instellen voor", name, e);
-            }
-          }
-
-          // === Properties van nested children ===
-          if (block.children && typeof block.children === "object") {
-            for (const childName in block.children) {
-              const child = instance.findOne(n => n.type === "INSTANCE" && n.name === childName);
-              if (child) {
-                console.log(`🔑 Properties voor child ${childName}:`, child.componentProperties);
-                try {
-                  child.setProperties(block.children[childName]);
-                  console.log(`✅ Props gezet op child ${childName}:`, block.children[childName]);
-                } catch (e) {
-                  console.warn(`⚠️ Kon properties niet instellen voor child ${childName}`, e);
-                }
-              } else {
-                console.warn(`⚠️ Child niet gevonden: ${childName}`);
-              }
-            }
-          }
-
-          placed++;
-        } catch (e) {
-          console.error(`Kon component niet importeren: ${name}`, e);
+        // Alleen bekende properties meesturen
+        const propsById = {};
+        for (const [k, v] of Object.entries(block.props)) {
+          if (nameToId[k]) {
+            propsById[nameToId[k]] = v;
+          } else if (validIds.has(k)) {
+            propsById[k] = v; // reeds een ID
+          } // onbekend -> negeren
         }
+
+        if (Object.keys(propsById).length > 0) {
+          instance.setProperties(propsById);
+        } else {
+          // Heuristiek: geen defs gematcht. Probeer via instance.componentProperties.
+          const instProps = instance.componentProperties || {};
+          const textPropIds = Object.entries(instProps)
+            .filter(([, info]) => info && info.type === "TEXT")
+            .map(([id]) => id);
+
+          // Als er precies 1 TEXT property is en we hebben een titelwaarde, zet die.
+          var titleValue = (block.props["Hero Title"] != null)
+            ? block.props["Hero Title"]
+            : ((block.props["Title"] != null)
+                ? block.props["Title"]
+                : block.props["title"]);
+
+          if (textPropIds.length === 1 && typeof titleValue === "string") {
+            instance.setProperties({ [textPropIds[0]]: titleValue });
+            console.warn(
+              "Geen defs via namen; heb 1 TEXT property gevonden en die gevuld met titel."
+            );
+          } else {
+            const available = Object.values(defs)
+              .map(function(d) { return d && d.name ? d.name : null; })
+              .filter(Boolean)
+              .join(", ");
+            console.warn(
+              `Geen overeenkomende properties gevonden. Beschikbaar: ${available}`
+            );
+          }
+        }
+      } catch (err) {
+        console.warn("Kon properties niet zetten:", err);
+      }
+    }
+
+        container.appendChild(instance);
       }
 
-      if (placed > 0) {
-        figma.notify(`✅ ${placed} blok(ken) toegevoegd.`);
-      } else {
-        figma.notify("Geen blokken geplaatst.");
-      }
-    } catch (err) {
-      console.error(err);
-      figma.notify("JSON niet geldig.");
+      figma.currentPage.appendChild(container);
+      figma.viewport.scrollAndZoomIntoView([container]);
+      figma.notify("Wireframe gegenereerd!");
+    } catch (e) {
+      console.error("JSON fout:", e);
+      figma.notify("JSON niet geldig: " + e.message);
     }
   }
 
   if (msg.type === "clear-page") {
-    const stack = getOrCreateStackFrame();
-    stack.remove();
-    figma.notify("Alle blokken verwijderd.");
+    figma.currentPage.selection = [];
+    figma.currentPage.children.forEach(node => node.remove());
+    figma.notify("Alle blokken verwijderd");
   }
 };
