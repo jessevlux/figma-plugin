@@ -19,7 +19,7 @@
       }
       textarea {
         width: 100%;
-        height: 280px;
+        height: 320px;
         box-sizing: border-box;
         font-family: ui-monospace, monospace;
         font-size: 13px;
@@ -48,9 +48,7 @@
         color: #e0e0e0;
         transition: background 0.2s;
       }
-      button:hover {
-        background: #3a3a3d;
-      }
+      button:hover { background: #3a3a3d; }
       .hint {
         margin-top: 14px;
         font-size: 12px;
@@ -60,109 +58,9 @@
   </head>
   <body>
     <h3>Wireframe JSON invoeren</h3>
-    <textarea id="jsonInput"></textarea>
-
-    <h3 style="margin-top: 20px">Hero properties (optioneel)</h3>
-    <label
-      style="
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 13px;
-        color: #ccc;
-        margin: 6px 0 8px 0;
-      "
-    >
-      <input type="checkbox" id="useHeroUIProps" /> Hero UI props toepassen
-      (anders gebruikt hij alleen de JSON)
-    </label>
-    <div
-      id="heroProps"
-      style="
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-bottom: 8px;
-        opacity: 0.6;
-        pointer-events: none;
-      "
-    >
-      <div class="row" style="gap: 16px; align-items: center">
-        <label style="display: flex; align-items: center; gap: 6px">
-          <input type="checkbox" id="heroHasTitle" checked /> Has Title
-        </label>
-        <label style="display: flex; align-items: center; gap: 6px">
-          <input type="checkbox" id="heroHasDescription" checked /> Has
-          Description
-        </label>
-        <label style="display: flex; align-items: center; gap: 6px">
-          <input type="checkbox" id="heroHasUsps" checked /> Has Usps
-        </label>
-        <label style="display: flex; align-items: center; gap: 6px">
-          <input type="checkbox" id="heroHasButtonPrimary" checked /> Has Button
-          Primary
-        </label>
-        <label style="display: flex; align-items: center; gap: 6px">
-          <input type="checkbox" id="heroHasButtonSecondary" checked /> Has
-          Button Secondary
-        </label>
-      </div>
-
-      <input
-        id="heroTitle"
-        placeholder="Hero Title"
-        style="
-          padding: 8px;
-          background: #252526;
-          border: 1px solid #3c3c3c;
-          border-radius: 6px;
-          color: #dcdcdc;
-        "
-      />
-      <textarea
-        id="heroDescription"
-        placeholder="Description"
-        style="height: 80px"
-      ></textarea>
-      <div class="row">
-        <input
-          id="heroUsp1"
-          placeholder="Usp 1"
-          style="
-            flex: 1;
-            padding: 8px;
-            background: #252526;
-            border: 1px solid #3c3c3c;
-            border-radius: 6px;
-            color: #dcdcdc;
-          "
-        />
-        <input
-          id="heroUsp2"
-          placeholder="Usp 2"
-          style="
-            flex: 1;
-            padding: 8px;
-            background: #252526;
-            border: 1px solid #3c3c3c;
-            border-radius: 6px;
-            color: #dcdcdc;
-          "
-        />
-        <input
-          id="heroUsp3"
-          placeholder="Usp 3"
-          style="
-            flex: 1;
-            padding: 8px;
-            background: #252526;
-            border: 1px solid #3c3c3c;
-            border-radius: 6px;
-            color: #dcdcdc;
-          "
-        />
-      </div>
-    </div>
+    <textarea id="jsonInput" placeholder='[
+  { "component": "Hero", "props": { "Hero Title": "Titel" } }
+]'></textarea>
 
     <div class="row">
       <button id="generate">Generate</button>
@@ -170,119 +68,39 @@
       <button id="clear">Verwijder blokken</button>
     </div>
 
-    <div class="hint">Klik op <b>Voorbeeld</b> om testdata in te vullen.</div>
+    <div class="hint">Plak hier je JSON. Alleen de JSON wordt gebruikt.</div>
 
     <script>
       const textarea = document.getElementById("jsonInput");
 
-      function getHeroPropsFromUI() {
-        const props = {};
-        // Booleans (altijd meesturen)
-        props["Has Title"] = document.getElementById("heroHasTitle").checked;
-        props["Has Description"] =
-          document.getElementById("heroHasDescription").checked;
-        props["Has Usps"] = document.getElementById("heroHasUsps").checked;
-        props["Has Button Primary"] = document.getElementById(
-          "heroHasButtonPrimary"
-        ).checked;
-        props["Has Button Secondary"] = document.getElementById(
-          "heroHasButtonSecondary"
-        ).checked;
-
-        // Tekstvelden (alleen meesturen als er inhoud is)
-        const title = document.getElementById("heroTitle").value.trim();
-        if (title) props["Hero Title"] = title;
-
-        const desc = document.getElementById("heroDescription").value.trim();
-        if (desc) props["Description"] = desc;
-
-        const usp1 = document.getElementById("heroUsp1").value.trim();
-        if (usp1) props["Usp 1"] = usp1;
-        const usp2 = document.getElementById("heroUsp2").value.trim();
-        if (usp2) props["Usp 2"] = usp2;
-        const usp3 = document.getElementById("heroUsp3").value.trim();
-        if (usp3) props["Usp 3"] = usp3;
-
-        return props;
-      }
-
       const exampleData = [
-        {
-          component: "Hero",
-          props: { "Hero Title": "Title of this website goes here" },
-        },
+        { component: "Hero", props: { "Hero Title": "Title of this website goes here" } },
         { component: "Grid" },
         { component: "Kolommen" },
-        { component: "Media" },
+        { component: "Media" }
       ];
 
       document.getElementById("generate").onclick = () => {
         const raw = textarea.value.trim();
         if (!raw) {
-          parent.postMessage(
-            { pluginMessage: { type: "generate-wireframe", json: "[]" } },
-            "*"
-          );
+          parent.postMessage({ pluginMessage: { type: "generate-wireframe", json: "[]" } }, "*");
           return;
         }
-
-        let blocks;
         try {
-          blocks = JSON.parse(raw);
+          const parsed = JSON.parse(raw);
+          parent.postMessage({ pluginMessage: { type: "generate-wireframe", json: JSON.stringify(parsed) } }, "*");
         } catch (e) {
           alert("JSON niet geldig: " + e.message);
-          return;
         }
-
-        let withProps = blocks;
-        if (useHeroUIProps.checked) {
-          const heroProps = getHeroPropsFromUI();
-          withProps = Array.isArray(blocks)
-            ? blocks.map((b) =>
-                b && b.component === "Hero"
-                  ? { ...b, props: { ...(b.props || {}), ...heroProps } }
-                  : b
-              )
-            : blocks;
-        }
-
-        parent.postMessage(
-          {
-            pluginMessage: {
-              type: "generate-wireframe",
-              json: JSON.stringify(withProps),
-            },
-          },
-          "*"
-        );
       };
 
       document.getElementById("example").onclick = () => {
-        // Vul een voorbeeld en zet ook voorbeeld-hero props in de UI
         textarea.value = JSON.stringify(exampleData, null, 2);
-        document.getElementById("heroTitle").value =
-          "Title of this website goes here";
-        document.getElementById("heroDescription").value =
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna";
-        document.getElementById("heroUsp1").value = "Paragraph Medium";
-        document.getElementById("heroUsp2").value = "Paragraph Medium";
-        document.getElementById("heroUsp3").value = "Paragraph Medium";
       };
 
       document.getElementById("clear").onclick = () => {
         parent.postMessage({ pluginMessage: { type: "clear-page" } }, "*");
       };
-      // Toggle: UI props aan/uit en velden enablen/disablen
-      const useHeroUIProps = document.getElementById("useHeroUIProps");
-      const heroPropsEl = document.getElementById("heroProps");
-      function setHeroPropsEnabled(enabled) {
-        heroPropsEl.style.opacity = enabled ? "1" : "0.6";
-        heroPropsEl.style.pointerEvents = enabled ? "auto" : "none";
-      }
-      useHeroUIProps.addEventListener("change", () =>
-        setHeroPropsEnabled(useHeroUIProps.checked)
-      );
-      setHeroPropsEnabled(false);
     </script>
   </body>
-</html>
+  </html>
