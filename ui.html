@@ -79,12 +79,99 @@
       const textarea = document.getElementById("jsonInput");
 
       const exampleData = [
-        { component: "Hero", props: { "Hero Title": "Welkom op deze site" } },
-        { component: "Grid", props: { Title: "Onze services" } },
-        { component: "Kolommen" },
-        { component: "MediaGroot" },
-        { component: "MediaSlider" },
-        { component: "EntryPostSlider" },
+        {
+          component: "Hero",
+          props: {
+            "Has Title": true,
+            "Hero Title": "Welkom bij ons platform",
+            Description:
+              "Dit is een voorbeeld hero sectie met een korte uitleg.",
+            "Usp 1": "Eerste USP",
+            "Usp 2": "Tweede USP",
+            "Usp 3": "Derde USP",
+            "Has Description": true,
+            "Has Usps": true,
+            "Has Button Primary": true,
+            "Has Button Secondary": true,
+          },
+        },
+        {
+          component: "Kolommen",
+          props: {
+            "Property 1": "Default",
+          },
+          children: [
+            {
+              component: "Media",
+              props: {
+                "Property 1": "Variant3",
+              },
+            },
+            {
+              component: "Content Kolommen Block",
+              props: {
+                "Has Accordion": true,
+                "Has Text": true,
+              },
+              children: [
+                {
+                  component: "Accordion list",
+                  props: {
+                    "Has Title": true,
+                    Text: "Accordion tekst 1",
+                    "Text 2": "Accordion tekst 2",
+                    "Text open item": "Accordion open tekst",
+                    "Text 3": "Accordion tekst 3",
+                    "Text 4": "Accordion tekst 4",
+                  },
+                },
+                {
+                  component: "Text Element",
+                  props: {
+                    "Title of text Block": "Kolommen content titel",
+                    Description: "Beschrijving van de content kolommen block",
+                    "Usp Text 1": "USP één",
+                    "Usp text 2": "USP twee",
+                    "Usp Text 3": "USP drie",
+                    "Has Primary Button": true,
+                    "Has Second Button": true,
+                    "Has List": true,
+                    "Has description": true,
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          component: "Grid",
+          props: {
+            "Property 1": "Default",
+          },
+          children: [
+            {
+              component: "Inner Grid Card",
+              props: {
+                Title: "Card 1",
+                Description: "Beschrijving voor kaart 1",
+              },
+            },
+            {
+              component: "Inner Grid Card",
+              props: {
+                Title: "Card 2",
+                Description: "Beschrijving voor kaart 2",
+              },
+            },
+            {
+              component: "Inner Grid Card",
+              props: {
+                Title: "Card 3",
+                Description: "Beschrijving voor kaart 3",
+              },
+            },
+          ],
+        },
       ];
 
       document.getElementById("generate").onclick = () => {
