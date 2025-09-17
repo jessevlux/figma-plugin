@@ -48,7 +48,9 @@
         color: #e0e0e0;
         transition: background 0.2s;
       }
-      button:hover { background: #3a3a3d; }
+      button:hover {
+        background: #3a3a3d;
+      }
       .hint {
         margin-top: 14px;
         font-size: 12px;
@@ -58,9 +60,12 @@
   </head>
   <body>
     <h3>Wireframe JSON invoeren</h3>
-    <textarea id="jsonInput" placeholder='[
+    <textarea
+      id="jsonInput"
+      placeholder='[
   { "component": "Hero", "props": { "Hero Title": "Titel" } }
-]'></textarea>
+]'
+    ></textarea>
 
     <div class="row">
       <button id="generate">Generate</button>
@@ -74,24 +79,27 @@
       const textarea = document.getElementById("jsonInput");
 
       const exampleData = [
-        { component: "Hero", props: { "Hero Title": "Title of this website goes here" } },
-        { component: "Grid" },
+        { component: "Hero", props: { "Hero Title": "Welkom op deze site" } },
+        { component: "Grid", props: { Title: "Onze services" } },
         { component: "Kolommen" },
-        { component: "Media" }
+        { component: "MediaGroot" },
+        { component: "MediaSlider" },
+        { component: "EntryPostSlider" },
       ];
 
       document.getElementById("generate").onclick = () => {
         const raw = textarea.value.trim();
         if (!raw) {
-          parent.postMessage({ pluginMessage: { type: "generate-wireframe", json: "[]" } }, "*");
+          parent.postMessage(
+            { pluginMessage: { type: "generate-wireframe", json: "[]" } },
+            "*"
+          );
           return;
         }
-        try {
-          const parsed = JSON.parse(raw);
-          parent.postMessage({ pluginMessage: { type: "generate-wireframe", json: JSON.stringify(parsed) } }, "*");
-        } catch (e) {
-          alert("JSON niet geldig: " + e.message);
-        }
+        parent.postMessage(
+          { pluginMessage: { type: "generate-wireframe", json: raw } },
+          "*"
+        );
       };
 
       document.getElementById("example").onclick = () => {
@@ -103,4 +111,4 @@
       };
     </script>
   </body>
-  </html>
+</html>
