@@ -63,7 +63,7 @@
     <textarea
       id="jsonInput"
       placeholder='[
-  { "component": "Hero", "props": { "Hero Title": "Titel" } }
+  { "component": "Hero", "props": { "Hero Title": "Welkom" } }
 ]'
     ></textarea>
 
@@ -82,23 +82,39 @@
         {
           component: "Hero",
           props: {
-            "Has Title": true,
             "Hero Title": "Welkom bij ons platform",
             Description:
-              "Dit is een voorbeeld hero sectie met een korte uitleg.",
-            "Usp 1": "Eerste USP",
-            "Usp 2": "Tweede USP",
-            "Usp 3": "Derde USP",
+              "Ontdek onze diensten en leer wat wij voor jou kunnen betekenen.",
+            "Usp 1": "Betrouwbaar en veilig",
+            "Usp 2": "Altijd bereikbaar",
+            "Usp 3": "Snel resultaat",
+            "Has Title": true,
             "Has Description": true,
             "Has Usps": true,
             "Has Button Primary": true,
             "Has Button Secondary": true,
           },
+          children: [
+            {
+              component: "Button Primary",
+              props: {
+                "Property 1": "Default",
+                "Text primary button": "Aan de slag",
+              },
+            },
+            {
+              component: "Button Secondary",
+              props: {
+                "Property 1": "Default",
+                "Text Secondary Button": "Meer informatie",
+              },
+            },
+          ],
         },
         {
           component: "Kolommen",
           props: {
-            "Property 1": "Default",
+            "Property 1": "Variant2",
           },
           children: [
             {
@@ -118,25 +134,114 @@
                   component: "Accordion list",
                   props: {
                     "Has Title": true,
-                    Text: "Accordion tekst 1",
-                    "Text 2": "Accordion tekst 2",
-                    "Text open item": "Accordion open tekst",
-                    "Text 3": "Accordion tekst 3",
-                    "Text 4": "Accordion tekst 4",
+                    Title: "Veelgestelde vragen",
+                    Text: "Hoe werkt dit product?",
+                    "Text 2": "Welke voordelen krijg ik?",
+                    "Text 3": "Hoe kan ik starten?",
+                    "Text 4": "Is er ondersteuning?",
+                    "Text open item": "Klik om meer details te zien",
                   },
                 },
                 {
                   component: "Text Element",
                   props: {
-                    "Title of text Block": "Kolommen content titel",
-                    Description: "Beschrijving van de content kolommen block",
-                    "Usp Text 1": "USP één",
-                    "Usp text 2": "USP twee",
-                    "Usp Text 3": "USP drie",
                     "Has Primary Button": true,
                     "Has Second Button": true,
                     "Has List": true,
                     "Has description": true,
+                    "Title of text Block": "Onze aanpak",
+                    Description: "Wij helpen je stap voor stap vooruit.",
+                    "Usp Text 1": "Eenvoudig in gebruik",
+                    "Usp text 2": "Flexibel inzetbaar",
+                    "Usp Text 3": "Bewezen resultaat",
+                  },
+                  children: [
+                    {
+                      component: "Button Primary",
+                      props: {
+                        "Property 1": "Default",
+                        "Text primary button": "Start nu",
+                      },
+                    },
+                    {
+                      component: "Button Secondary",
+                      props: {
+                        "Property 1": "Default",
+                        "Text Secondary Button": "Lees verder",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          component: "MediaGroot",
+          props: {
+            Title: "Inspirerende beelden",
+          },
+        },
+        {
+          component: "MediaSlider",
+          props: {
+            Title: "Onze projecten",
+          },
+        },
+        {
+          component: "Grid",
+          props: {
+            "Property 1": "Default",
+            Title: "Wat wij bieden",
+          },
+          children: [
+            {
+              component: "Inner Grid Card",
+              index: 0,
+              props: {
+                Title: "Persoonlijke begeleiding",
+                Description: "Wij staan altijd klaar om je te ondersteunen.",
+              },
+              children: [
+                {
+                  component: "Button Primary",
+                  props: {
+                    "Property 1": "Default",
+                    "Text primary button": "Ontdek meer",
+                  },
+                },
+              ],
+            },
+            {
+              component: "Inner Grid Card",
+              index: 1,
+              props: {
+                Title: "Flexibele oplossingen",
+                Description: "Oplossingen die passen bij jouw situatie.",
+              },
+              children: [
+                {
+                  component: "Button Primary",
+                  props: {
+                    "Property 1": "Default",
+                    "Text primary button": "Ontdek meer",
+                  },
+                },
+              ],
+            },
+            {
+              component: "Inner Grid Card",
+              index: 2,
+              props: {
+                Title: "Snel resultaat",
+                Description: "Ervaar direct de voordelen van onze aanpak.",
+              },
+              children: [
+                {
+                  component: "Button Primary",
+                  props: {
+                    "Property 1": "Default",
+                    "Text primary button": "Ontdek meer",
                   },
                 },
               ],
@@ -144,31 +249,80 @@
           ],
         },
         {
-          component: "Grid",
+          component: "EntryPostSlider",
           props: {
-            "Property 1": "Default",
+            Title: "Laatste updates",
           },
           children: [
             {
-              component: "Inner Grid Card",
+              component: "Entry Post Inner",
+              index: 0,
               props: {
-                Title: "Card 1",
-                Description: "Beschrijving voor kaart 1",
+                "Has title": true,
+                "Has description": true,
+                "Has Category": true,
+                "Has Popular": true,
+                "Category Name": "Nieuws",
+                Popular: "Aanbevolen",
+                "Title of this block": "Nieuwe functies gelanceerd",
+                Description:
+                  "Ontdek de nieuwste verbeteringen in ons platform.",
               },
+              children: [
+                {
+                  component: "Button Primary",
+                  props: {
+                    "Property 1": "Default",
+                    "Text primary button": "Lees meer",
+                  },
+                },
+              ],
             },
             {
-              component: "Inner Grid Card",
+              component: "Entry Post Inner",
+              index: 1,
               props: {
-                Title: "Card 2",
-                Description: "Beschrijving voor kaart 2",
+                "Has title": true,
+                "Has description": true,
+                "Has Category": true,
+                "Has Popular": false,
+                "Category Name": "Blog",
+                Popular: "",
+                "Title of this block": "Tips voor een betere workflow",
+                Description: "Verbeter je productiviteit met deze suggesties.",
               },
+              children: [
+                {
+                  component: "Button Primary",
+                  props: {
+                    "Property 1": "Default",
+                    "Text primary button": "Lees meer",
+                  },
+                },
+              ],
             },
             {
-              component: "Inner Grid Card",
+              component: "Entry Post Inner",
+              index: 2,
               props: {
-                Title: "Card 3",
-                Description: "Beschrijving voor kaart 3",
+                "Has title": true,
+                "Has description": true,
+                "Has Category": true,
+                "Has Popular": true,
+                "Category Name": "Events",
+                Popular: "Populair",
+                "Title of this block": "Komende evenementen",
+                Description: "Bekijk onze agenda en meld je aan.",
               },
+              children: [
+                {
+                  component: "Button Primary",
+                  props: {
+                    "Property 1": "Default",
+                    "Text primary button": "Lees meer",
+                  },
+                },
+              ],
             },
           ],
         },
