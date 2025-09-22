@@ -1,8 +1,19 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Wireframe Components Schema",
+  "title": "Website Wireframe Schema",
   "type": "array",
-  "items": { "$ref": "#/definitions/Component" },
+  "items": {
+    "type": "object",
+    "required": ["page", "blocks"],
+    "properties": {
+      "page": { "type": "string" },
+      "blocks": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/Component" }
+      }
+    },
+    "additionalProperties": false
+  },
   "definitions": {
     "Component": {
       "type": "object",
@@ -14,8 +25,7 @@
           "type": "array",
           "items": { "$ref": "#/definitions/Component" }
         },
-        "index": { "type": "integer" },
-        "page": { "type": "string", "description": "Optioneel. Doelpagina (nu meestal 'Home')." }
+        "index": { "type": "integer" }
       },
       "allOf": [
         { "$ref": "#/definitions/ComponentUnion" }
@@ -134,9 +144,6 @@
         "component": { "const": "MediaGroot" },
         "props": {
           "type": "object",
-          "properties": {
-            "Title": { "type": "string" }
-          },
           "additionalProperties": false
         }
       },
@@ -212,54 +219,6 @@
           }
         }
       },
-      "allOf": [
-        {
-          "if": {
-            "properties": {
-              "props": { "properties": { "Has Accordion": { "const": true } } }
-            }
-          },
-          "then": {
-            "properties": {
-              "children": {
-                "type": "array",
-                "contains": { "properties": { "component": { "const": "Accordion list" } } }
-              }
-            }
-          },
-          "else": {
-            "properties": {
-              "children": {
-                "type": "array",
-                "not": { "contains": { "properties": { "component": { "const": "Accordion list" } } } }
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "props": { "properties": { "Has Text": { "const": true } } }
-            }
-          },
-          "then": {
-            "properties": {
-              "children": {
-                "type": "array",
-                "contains": { "properties": { "component": { "const": "Text Element" } } }
-              }
-            }
-          },
-          "else": {
-            "properties": {
-              "children": {
-                "type": "array",
-                "not": { "contains": { "properties": { "component": { "const": "Text Element" } } } }
-              }
-            }
-          }
-        }
-      ],
       "additionalProperties": false
     },
 
@@ -318,54 +277,6 @@
           }
         }
       },
-      "allOf": [
-        {
-          "if": {
-            "properties": {
-              "props": { "properties": { "Has Primary Button": { "const": true } } }
-            }
-          },
-          "then": {
-            "properties": {
-              "children": {
-                "type": "array",
-                "contains": { "properties": { "component": { "const": "Button Primary" } } }
-              }
-            }
-          },
-          "else": {
-            "properties": {
-              "children": {
-                "type": "array",
-                "not": { "contains": { "properties": { "component": { "const": "Button Primary" } } } }
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "props": { "properties": { "Has Second Button": { "const": true } } }
-            }
-          },
-          "then": {
-            "properties": {
-              "children": {
-                "type": "array",
-                "contains": { "properties": { "component": { "const": "Button Secondary" } } }
-              }
-            }
-          },
-          "else": {
-            "properties": {
-              "children": {
-                "type": "array",
-                "not": { "contains": { "properties": { "component": { "const": "Button Secondary" } } } }
-              }
-            }
-          }
-        }
-      ],
       "additionalProperties": false
     },
 
@@ -436,6 +347,7 @@
     "InnerGridCard": {
       "properties": {
         "component": { "const": "Inner Grid Card" },
+        "index": { "type": "integer", "minimum": 0 },
         "props": {
           "type": "object",
           "properties": {
@@ -446,10 +358,12 @@
         },
         "children": {
           "type": "array",
-          "items": { "$ref": "#/definitions/ButtonPrimary" }
-        },
-        "index": { "type": "integer" }
+          "items": { "$ref": "#/definitions/ButtonPrimary" },
+          "minItems": 1,
+          "maxItems": 1
+        }
       },
+      "required": ["component", "props", "index"],
       "additionalProperties": false
     },
 
@@ -476,6 +390,7 @@
     "EntryPostInner": {
       "properties": {
         "component": { "const": "Entry Post Inner" },
+        "index": { "type": "integer", "minimum": 0 },
         "props": {
           "type": "object",
           "properties": {
@@ -493,10 +408,12 @@
         },
         "children": {
           "type": "array",
-          "items": { "$ref": "#/definitions/ButtonPrimary" }
-        },
-        "index": { "type": "integer" }
+          "items": { "$ref": "#/definitions/ButtonPrimary" },
+          "minItems": 1,
+          "maxItems": 1
+        }
       },
+      "required": ["component", "props", "index"],
       "additionalProperties": false
     },
 

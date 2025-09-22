@@ -62,7 +62,7 @@ De AI moet **eerst plannen** (sitemap/secties) en daarna **selectief** JSON gene
 
 **Props**
 
-- Title (string, optional)
+- Geen
 
 **Gebruik**
 

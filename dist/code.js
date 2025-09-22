@@ -11,7 +11,6 @@ var mapping = {
 figma.showUI(__html__, { width: 600, height: 500 });
 
 // ============== helpers ==============
-// Bouwt een map waarmee we óók op leesbare namen kunnen zetten (id vóór '#')
 function buildNameToIdFromInstance(instance) {
   var map = {};
   var instProps = instance.componentProperties || {};
@@ -23,7 +22,6 @@ function buildNameToIdFromInstance(instance) {
   return map;
 }
 
-// Zet properties op precies die instance (top-level of nested)
 function setPropsOnInstance(instance, props, compPath) {
   if (!props) return 0;
   var nameToId = buildNameToIdFromInstance(instance);
@@ -41,27 +39,22 @@ function setPropsOnInstance(instance, props, compPath) {
     }
   }
   if (Object.keys(toSet).length) {
-    // console.log("✅ Props die gezet worden op", compPath, toSet);
     instance.setProperties(toSet);
     return Object.keys(toSet).length;
   }
   return 0;
 }
 
-// Controleer of een gevonden instance een bepaald component (set) is
 function isTargetInstance(inst, targetName) {
   if (!inst || inst.type !== "INSTANCE") return false;
   var mc = inst.mainComponent;
   if (!mc) return false;
-  // 1) exacte componentnaam (soms is dit de varianten-naam)
   if (mc.name === targetName) return true;
-  // 2) naam van het component set (parent)
   var p = mc.parent;
   if (p && p.type === "COMPONENT_SET" && p.name === targetName) return true;
   return false;
 }
 
-// Vind alle geneste instances met deze (set)naam
 function findNestedInstances(rootInstance, targetName) {
   var all = rootInstance.findAll(function (n) {
     return n.type === "INSTANCE";
@@ -73,7 +66,6 @@ function findNestedInstances(rootInstance, targetName) {
   return out;
 }
 
-// Past spec toe op een instance en recursief op children-specs
 function applySpecToInstance(instance, spec, pathLabel) {
   if (spec.props) setPropsOnInstance(instance, spec.props, pathLabel);
 
@@ -86,7 +78,6 @@ function applySpecToInstance(instance, spec, pathLabel) {
         continue;
       }
 
-      // index: nummer -> precies die; "*" of "all" -> allemaal; anders -> eerste
       if (typeof ch.index === "number") {
         var target = matches[ch.index];
         if (target)
@@ -123,27 +114,23 @@ function applySpecToInstance(instance, spec, pathLabel) {
   }
 }
 
-// Maak/haal Wireframe-root (witte achtergrond, auto layout verticaal)
-function getOrCreateWireframeRoot() {
-  var children = figma.currentPage.children;
-  for (var i = 0; i < children.length; i++) {
-    var n = children[i];
-    if (n.type === "FRAME" && n.name === "Wireframe") {
-      n.layoutMode = "VERTICAL";
-      n.primaryAxisSizingMode = "AUTO";
-      n.counterAxisSizingMode = "AUTO";
-      n.itemSpacing = 0;
-      n.fills = [{ type: "SOLID", color: { r: 1, g: 1, b: 1 } }]; // wit
-      return n;
-    }
-  }
+// maakt frame voor 1 pagina (wit, auto-layout) met horizontale offset
+function createPageFrame(pageName, index) {
   var f = figma.createFrame();
-  f.name = "Wireframe";
+  f.name = "Wireframe – " + pageName;
   f.layoutMode = "VERTICAL";
   f.primaryAxisSizingMode = "AUTO";
   f.counterAxisSizingMode = "AUTO";
   f.itemSpacing = 0;
-  f.fills = [{ type: "SOLID", color: { r: 1, g: 1, b: 1 } }]; // wit
+  f.fills = [{ type: "SOLID", color: { r: 1, g: 1, b: 1 } }];
+
+  // Zet elke pagina naast elkaar
+  f.x = index * 1600; // horizontale offset per pagina
+  f.y = 0;
+
+  // Zorg dat Figma dit frame niet probeert te alignen in iets anders
+  f.layoutAlign = "INHERIT";
+
   figma.currentPage.appendChild(f);
   return f;
 }
@@ -155,73 +142,71 @@ figma.ui.onmessage = async function (msg) {
     var originalZoom = figma.viewport.zoom;
 
     try {
-      var blocks = JSON.parse(msg.json);
-      var wireframeRoot = null;
+      var parsed = JSON.parse(msg.json);
       var invalid = [];
       var created = 0;
 
-      for (var bi = 0; bi < blocks.length; bi++) {
-        var block = blocks[bi];
-        var compName = block.component;
-        var key = mapping[compName];
+      var pages =
+        Array.isArray(parsed) && parsed[0] && parsed[0].page
+          ? parsed
+          : [{ page: "Default", blocks: parsed }];
 
-        console.log(
-          'DEBUG → JSON component: "' +
-            compName +
-            '", mapping key: ' +
-            (key || "NIET GEVONDEN")
-        );
+      for (var pi = 0; pi < pages.length; pi++) {
+        var pageSpec = pages[pi];
+        var pageFrame = createPageFrame(pageSpec.page || "Page", pi);
 
-        if (!key) {
-          invalid.push(compName || "[ontbreekt]");
-          continue;
-        }
+        for (var bi = 0; bi < pageSpec.blocks.length; bi++) {
+          var block = pageSpec.blocks[bi];
+          var compName = block.component;
+          var key = mapping[compName];
 
-        try {
-          var comp = await figma.importComponentByKeyAsync(key);
-          var instance = comp.createInstance();
-
-          // Top-level props
-          applySpecToInstance(
-            instance,
-            {
-              props: block.props || {},
-              children: block.children || [],
-              component: compName,
-            },
-            compName
-          );
-
-          // Wireframe pas nu maken
-          if (!wireframeRoot) wireframeRoot = getOrCreateWireframeRoot();
-          wireframeRoot.appendChild(instance);
-          created++;
           console.log(
-            '✅ Component "' + compName + '" succesvol geïmporteerd.'
-          );
-        } catch (err) {
-          console.error(
-            '❌ Figma kon component "' +
+            'DEBUG → JSON component: "' +
               compName +
-              '" met key "' +
-              key +
-              '" NIET laden.',
-            err
+              '", mapping key: ' +
+              (key || "NIET GEVONDEN")
           );
-          invalid.push(compName);
+
+          if (!key) {
+            invalid.push(compName || "[ontbreekt]");
+            continue;
+          }
+
+          try {
+            var comp = await figma.importComponentByKeyAsync(key);
+            var instance = comp.createInstance();
+
+            applySpecToInstance(
+              instance,
+              {
+                props: block.props || {},
+                children: block.children || [],
+                component: compName,
+              },
+              compName
+            );
+
+            pageFrame.appendChild(instance);
+            created++;
+            console.log(
+              '✅ Component "' + compName + '" succesvol geïmporteerd.'
+            );
+          } catch (err) {
+            console.error(
+              '❌ Figma kon component "' +
+                compName +
+                '" met key "' +
+                key +
+                '" NIET laden.',
+              err
+            );
+            invalid.push(compName);
+          }
         }
+
+        if (pageFrame.children.length === 0) pageFrame.remove();
       }
 
-      // niets aangemaakt? laat ook geen lege wireframe achter
-      if (
-        created === 0 &&
-        wireframeRoot &&
-        wireframeRoot.children.length === 0
-      ) {
-        wireframeRoot.remove();
-      }
-
-      // viewport terugzetten
       figma.viewport.center = originalCenter;
       figma.viewport.zoom = originalZoom;
 
@@ -235,7 +220,13 @@ figma.ui.onmessage = async function (msg) {
       } else if (created === 0) {
         figma.notify("Er is niets geplaatst (geen geldige componenten).");
       } else {
-        figma.notify("Wireframe bijgewerkt met " + created + " blok(ken).");
+        figma.notify(
+          "Wireframes bijgewerkt met " +
+            created +
+            " blok(ken) in " +
+            pages.length +
+            " pagina('s)."
+        );
       }
     } catch (e) {
       console.error("JSON fout:", e);
@@ -248,11 +239,13 @@ figma.ui.onmessage = async function (msg) {
     var removed = false;
     for (var i = pageChildren.length - 1; i >= 0; i--) {
       var n = pageChildren[i];
-      if (n.type === "FRAME" && n.name === "Wireframe") {
+      if (n.type === "FRAME" && n.name.startsWith("Wireframe")) {
         n.remove();
         removed = true;
       }
     }
-    figma.notify(removed ? "Wireframe leeggemaakt" : "Geen Wireframe gevonden");
+    figma.notify(
+      removed ? "Wireframes leeggemaakt" : "Geen Wireframes gevonden"
+    );
   }
 };
