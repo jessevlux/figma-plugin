@@ -1,0 +1,535 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Wireframe Components Schema",
+  "type": "array",
+  "items": { "$ref": "#/definitions/Component" },
+  "definitions": {
+    "Component": {
+      "type": "object",
+      "required": ["component", "props"],
+      "properties": {
+        "component": { "type": "string" },
+        "props": { "type": "object" },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Component" }
+        },
+        "index": { "type": "integer" },
+        "page": { "type": "string", "description": "Optioneel. Doelpagina (nu meestal 'Home')." }
+      },
+      "allOf": [
+        { "$ref": "#/definitions/ComponentUnion" }
+      ],
+      "additionalProperties": false
+    },
+
+    "ComponentUnion": {
+      "oneOf": [
+        { "$ref": "#/definitions/Hero" },
+        { "$ref": "#/definitions/MediaGroot" },
+        { "$ref": "#/definitions/Kolommen" },
+        { "$ref": "#/definitions/MediaSlider" },
+        { "$ref": "#/definitions/Grid" },
+        { "$ref": "#/definitions/EntryPostSlider" },
+        { "$ref": "#/definitions/ButtonPrimary" },
+        { "$ref": "#/definitions/ButtonSecondary" },
+        { "$ref": "#/definitions/AccordionList" },
+        { "$ref": "#/definitions/TextElement" },
+        { "$ref": "#/definitions/InnerGridCard" },
+        { "$ref": "#/definitions/EntryPostInner" },
+        { "$ref": "#/definitions/Media" },
+        { "$ref": "#/definitions/ContentKolommenBlock" }
+      ]
+    },
+
+    "Hero": {
+      "properties": {
+        "component": { "const": "Hero" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Has Title": { "type": "boolean" },
+            "Description": { "type": "string" },
+            "Hero Title": { "type": "string" },
+            "Usp 1": { "type": "string" },
+            "Usp 2": { "type": "string" },
+            "Usp 3": { "type": "string" },
+            "Has Description": { "type": "boolean" },
+            "Has Usps": { "type": "boolean" },
+            "Has Button Primary": { "type": "boolean" },
+            "Has Button Secondary": { "type": "boolean" }
+          },
+          "required": [
+            "Has Title",
+            "Has Description",
+            "Has Usps",
+            "Has Button Primary",
+            "Has Button Secondary"
+          ],
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              { "$ref": "#/definitions/ButtonPrimary" },
+              { "$ref": "#/definitions/ButtonSecondary" }
+            ]
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "props": { "properties": { "Has Button Primary": { "const": true } } }
+            }
+          },
+          "then": {
+            "properties": {
+              "children": {
+                "type": "array",
+                "contains": { "properties": { "component": { "const": "Button Primary" } } }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "children": {
+                "type": "array",
+                "not": { "contains": { "properties": { "component": { "const": "Button Primary" } } } }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "props": { "properties": { "Has Button Secondary": { "const": true } } }
+            }
+          },
+          "then": {
+            "properties": {
+              "children": {
+                "type": "array",
+                "contains": { "properties": { "component": { "const": "Button Secondary" } } }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "children": {
+                "type": "array",
+                "not": { "contains": { "properties": { "component": { "const": "Button Secondary" } } } }
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+
+    "MediaGroot": {
+      "properties": {
+        "component": { "const": "MediaGroot" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Title": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "Kolommen": {
+      "properties": {
+        "component": { "const": "Kolommen" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Property 1": {
+              "type": "string",
+              "enum": ["Default", "Variant2"],
+              "description": "Default = Media links/Content rechts; Variant2 = omgekeerd"
+            }
+          },
+          "required": ["Property 1"],
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              { "$ref": "#/definitions/Media" },
+              { "$ref": "#/definitions/ContentKolommenBlock" }
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "Media": {
+      "properties": {
+        "component": { "const": "Media" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Property 1": {
+              "type": "string",
+              "enum": ["Default", "Variant2", "Variant3"],
+              "description": "Default = 1 square image; Variant2 = 2 horizontale images; Variant3 = 1 horizontaal + 2 squares"
+            }
+          },
+          "required": ["Property 1"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "ContentKolommenBlock": {
+      "properties": {
+        "component": { "const": "Content Kolommen Block" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Has Accordion": { "type": "boolean" },
+            "Has Text": { "type": "boolean" }
+          },
+          "required": ["Has Accordion", "Has Text"],
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              { "$ref": "#/definitions/AccordionList" },
+              { "$ref": "#/definitions/TextElement" }
+            ]
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "props": { "properties": { "Has Accordion": { "const": true } } }
+            }
+          },
+          "then": {
+            "properties": {
+              "children": {
+                "type": "array",
+                "contains": { "properties": { "component": { "const": "Accordion list" } } }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "children": {
+                "type": "array",
+                "not": { "contains": { "properties": { "component": { "const": "Accordion list" } } } }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "props": { "properties": { "Has Text": { "const": true } } }
+            }
+          },
+          "then": {
+            "properties": {
+              "children": {
+                "type": "array",
+                "contains": { "properties": { "component": { "const": "Text Element" } } }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "children": {
+                "type": "array",
+                "not": { "contains": { "properties": { "component": { "const": "Text Element" } } } }
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+
+    "AccordionList": {
+      "properties": {
+        "component": { "const": "Accordion list" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Has Title": { "type": "boolean" },
+            "Title": { "type": "string" },
+            "Text": { "type": "string" },
+            "Text 2": { "type": "string" },
+            "Text 3": { "type": "string" },
+            "Text 4": { "type": "string" },
+            "Text open item": { "type": "string" }
+          },
+          "required": ["Has Title"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "TextElement": {
+      "properties": {
+        "component": { "const": "Text Element" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Has Primary Button": { "type": "boolean" },
+            "Has Second Button": { "type": "boolean" },
+            "Has List": { "type": "boolean" },
+            "Has description": { "type": "boolean" },
+            "Title of text Block": { "type": "string" },
+            "Description": { "type": "string" },
+            "Usp Text 1": { "type": "string" },
+            "Usp text 2": { "type": "string" },
+            "Usp Text 3": { "type": "string" }
+          },
+          "required": [
+            "Has Primary Button",
+            "Has Second Button",
+            "Has List",
+            "Has description"
+          ],
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              { "$ref": "#/definitions/ButtonPrimary" },
+              { "$ref": "#/definitions/ButtonSecondary" }
+            ]
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "props": { "properties": { "Has Primary Button": { "const": true } } }
+            }
+          },
+          "then": {
+            "properties": {
+              "children": {
+                "type": "array",
+                "contains": { "properties": { "component": { "const": "Button Primary" } } }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "children": {
+                "type": "array",
+                "not": { "contains": { "properties": { "component": { "const": "Button Primary" } } } }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "props": { "properties": { "Has Second Button": { "const": true } } }
+            }
+          },
+          "then": {
+            "properties": {
+              "children": {
+                "type": "array",
+                "contains": { "properties": { "component": { "const": "Button Secondary" } } }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "children": {
+                "type": "array",
+                "not": { "contains": { "properties": { "component": { "const": "Button Secondary" } } } }
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+
+    "MediaSlider": {
+      "properties": {
+        "component": { "const": "MediaSlider" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Title": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "Grid": {
+      "properties": {
+        "component": { "const": "Grid" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Property 1": {
+              "type": "string",
+              "enum": ["Default", "Variant2"],
+              "description": "Default = 3 cards; Variant2 = 4 cards"
+            },
+            "Title": { "type": "string" }
+          },
+          "required": ["Property 1"],
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/InnerGridCard" }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "props": { "properties": { "Property 1": { "const": "Default" } } }
+            }
+          },
+          "then": {
+            "properties": {
+              "children": { "type": "array", "minItems": 3, "maxItems": 3 }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "props": { "properties": { "Property 1": { "const": "Variant2" } } }
+            }
+          },
+          "then": {
+            "properties": {
+              "children": { "type": "array", "minItems": 4, "maxItems": 4 }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+
+    "InnerGridCard": {
+      "properties": {
+        "component": { "const": "Inner Grid Card" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Title": { "type": "string" },
+            "Description": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ButtonPrimary" }
+        },
+        "index": { "type": "integer" }
+      },
+      "additionalProperties": false
+    },
+
+    "EntryPostSlider": {
+      "properties": {
+        "component": { "const": "EntryPostSlider" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Title": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/EntryPostInner" },
+          "minItems": 3,
+          "maxItems": 3
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "EntryPostInner": {
+      "properties": {
+        "component": { "const": "Entry Post Inner" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Has title": { "type": "boolean" },
+            "Has description": { "type": "boolean" },
+            "Has Category": { "type": "boolean" },
+            "Has Popular": { "type": "boolean" },
+            "Category Name": { "type": "string" },
+            "Popular": { "type": "string" },
+            "Title of this block": { "type": "string" },
+            "Description": { "type": "string" }
+          },
+          "required": ["Has title", "Has description", "Has Category", "Has Popular"],
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ButtonPrimary" }
+        },
+        "index": { "type": "integer" }
+      },
+      "additionalProperties": false
+    },
+
+    "ButtonPrimary": {
+      "properties": {
+        "component": { "const": "Button Primary" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Property 1": { "type": "string", "enum": ["Default"] },
+            "Text primary button": { "type": "string" }
+          },
+          "required": ["Property 1", "Text primary button"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "ButtonSecondary": {
+      "properties": {
+        "component": { "const": "Button Secondary" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Property 1": { "type": "string", "enum": ["Default"] },
+            "Text Secondary Button": { "type": "string" }
+          },
+          "required": ["Property 1", "Text Secondary Button"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
