@@ -19,6 +19,8 @@ De AI moet eerst plannen (sitemap/secties/pagina’s) en daarna selectief JSON g
 
   - AI moet dan **kort uitleggen** waarom dit logisch is (bijv. “Er zijn weinig diensten, dus alle info past overzichtelijk op één pagina”).
 
+- **Footer**: altijd verplicht als laatste blok op de site.
+
 ---
 
 ## Sectierichtlijnen
@@ -28,6 +30,8 @@ De AI moet eerst plannen (sitemap/secties/pagina’s) en daarna selectief JSON g
   - `Grid` kan meerdere keren (features, prijzen, team, testimonials als cards).
   - `Kolommen` voor afwisseling tekst/beeld, met `Media` varianten voor visuele variatie.
   - `EntryPostSlider` alleen als “nieuws/blog/updates” relevant is (meestal 1×).
+  - `LogoSlider` optioneel voor social proof (partners/klanten).
+  - `CalltoAction` meestal 1×, als afsluitende of tussentijdse CTA.
 
 - **Buttons/CTAs** alleen waar zinvol (via booleans).
 
@@ -87,15 +91,15 @@ De AI moet eerst plannen (sitemap/secties/pagina’s) en daarna selectief JSON g
 
 **Children**
 
-- Media
+- **Media**
 
-  - Props: Property 1 (Default | Variant2 | Variant3)
+  - Property 1 (Default | Variant2 | Variant3)
 
     - Default = 1 square image
     - Variant2 = 2 horizontale images
-    - Variant3 = 1 horizontale + 2 squares
+    - Variant3 = 1 horizontaal + 2 squares
 
-- Content Kolommen Block
+- **Content Kolommen Block**
 
   - Props: Has Accordion (boolean), Has Text (boolean)
   - Children afhankelijk van props:
@@ -178,9 +182,64 @@ De AI moet eerst plannen (sitemap/secties/pagina’s) en daarna selectief JSON g
 
 ---
 
-## Buttons
+### LogoSlider
 
-### Button Primary / Button Secondary
+**Props**
+
+- Title (string)
+
+**Gebruik**
+
+- Voor partnerlogo’s, klanten of sponsoren.
+- Vaak bovenaan of midden in de Home-pagina.
+- Optioneel, alleen zinvol als er daadwerkelijk logo’s te tonen zijn.
+
+---
+
+### CalltoAction
+
+**Props**
+
+- Title (string)
+- Usp 1 (string)
+- Usp 2 (string)
+- Usp 3 (string)
+- Has Title (boolean)
+- Has Usps (boolean)
+- Has Button Primary (boolean)
+- Has Button Secondary (boolean)
+
+**Children**
+
+- Button Primary (alleen als `Has Button Primary` = true)
+- Button Secondary (alleen als `Has Button Secondary` = true)
+
+**Gebruik**
+
+- Sterke afsluitende CTA, meestal onderaan Home.
+- Kan ook als extra tussensectie worden ingezet.
+
+---
+
+### Footer
+
+**Props**
+
+- Has Column 1–4 (booleans)
+- Header 1–4 (strings)
+- Link sets (1A–1G, 2A–2G, 3A–3G, 4A–4G)
+- Has Nieuwsbrief (boolean)
+
+**Gebruik**
+
+- Altijd verplicht als laatste blok van de site.
+- Bevat navigatie, bedrijfsinfo, supportlinks, legal, en optioneel een nieuwsbrief.
+
+---
+
+### Buttons
+
+#### Button Primary / Button Secondary
 
 **Props**
 
@@ -198,9 +257,9 @@ De AI moet eerst plannen (sitemap/secties/pagina’s) en daarna selectief JSON g
 
 - **Altijd alle booleans opnemen** (true/false).
 - **Children alleen toevoegen als de booleans dat vereisen.**
+- **Index verplicht** bij Grid-cards en Entry Posts, altijd beginnend bij 0.
 - **Varianten bewust kiezen** (niet standaard alles Default).
 - **Herhaling toegestaan** om voldoende blokken te halen (bijv. meerdere Grids).
+- **Footer verplicht** als laatste blok.
 - **One-pager alleen toestaan met uitleg** waarom er geen extra pagina’s zijn.
 - **Multi-pager voorkeur**: Home + Contact, en vaak ook Over ons of Diensten.
-
----

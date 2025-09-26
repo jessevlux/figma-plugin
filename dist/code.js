@@ -1,11 +1,14 @@
 // ============== mapping ==============
 var mapping = {
-  EntryPostSlider: "f6e67fbecfc8796ca7ec65ddaa9f6cc81cea0b7d",
-  Grid: "3a59b3a1b88c31b18a7518a28fd1bdbfe4578c5e",
-  Hero: "b32b45808374ab06b22672b9b96483c7a1c550db",
-  Kolommen: "81fffb24adf546b6231c236876822b4f832465ca",
-  MediaGroot: "7f0894e5f2637427637add56872aa7fdd599c243",
-  MediaSlider: "ae3a3d3df675839c6193581bec299f5521710df9",
+  CalltoAction: "8a16e7ae870332d3ee5dee0b0a7bbe36161b78e4", // Call to Action
+  EntryPostSlider: "f6e67fbecfc8796ca7ec65ddaa9f6cc81cea0b7d", // Entry/Post Slider
+  Footer: "a86d31be91c7e1072a2c3b7ea9f3420087fae45c", // Footer
+  Grid: "3a59b3a1b88c31b18a7518a28fd1bdbfe4578c5e", // Grid
+  Hero: "b32b45808374ab06b22672b9b96483c7a1c550db", // Hero
+  Kolommen: "81fffb24adf546b6231c236876822b4f832465ca", // Kolommen
+  LogoSlider: "0d566f76593314a890563894e9a518e7802c1501", // Logo Slider
+  MediaGroot: "7f0894e5f2637427637add56872aa7fdd599c243", // Media Groot
+  MediaSlider: "ae3a3d3df675839c6193581bec299f5521710df9", // Media Slider
 };
 
 figma.showUI(__html__, { width: 600, height: 500 });

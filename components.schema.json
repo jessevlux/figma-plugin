@@ -48,7 +48,10 @@
         { "$ref": "#/definitions/InnerGridCard" },
         { "$ref": "#/definitions/EntryPostInner" },
         { "$ref": "#/definitions/Media" },
-        { "$ref": "#/definitions/ContentKolommenBlock" }
+        { "$ref": "#/definitions/ContentKolommenBlock" },
+        { "$ref": "#/definitions/LogoSlider" },
+        { "$ref": "#/definitions/CalltoAction" },
+        { "$ref": "#/definitions/Footer" }
       ]
     },
 
@@ -443,6 +446,110 @@
             "Text Secondary Button": { "type": "string" }
           },
           "required": ["Property 1", "Text Secondary Button"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "LogoSlider": {
+      "properties": {
+        "component": { "const": "LogoSlider" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Title": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "CalltoAction": {
+      "properties": {
+        "component": { "const": "CalltoAction" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Title": { "type": "string" },
+            "Usp 1": { "type": "string" },
+            "Usp 2": { "type": "string" },
+            "Usp 3": { "type": "string" },
+            "Has Title": { "type": "boolean" },
+            "Has Usps": { "type": "boolean" },
+            "Has Button Primary": { "type": "boolean" },
+            "Has Button Secondary": { "type": "boolean" }
+          },
+          "required": [
+            "Has Title",
+            "Has Usps",
+            "Has Button Primary",
+            "Has Button Secondary"
+          ],
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              { "$ref": "#/definitions/ButtonPrimary" },
+              { "$ref": "#/definitions/ButtonSecondary" }
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "Footer": {
+      "properties": {
+        "component": { "const": "Footer" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Has Column 1": { "type": "boolean" },
+            "Header 1": { "type": "string" },
+            "Link1A": { "type": "string" },
+            "Link1B": { "type": "string" },
+            "Link1C": { "type": "string" },
+            "Link1D": { "type": "string" },
+            "Link1E": { "type": "string" },
+            "Link1F": { "type": "string" },
+            "Link1G": { "type": "string" },
+
+            "Has Column 2": { "type": "boolean" },
+            "Header 2": { "type": "string" },
+            "Link2A": { "type": "string" },
+            "Link2B": { "type": "string" },
+            "Link2C": { "type": "string" },
+            "Link2D": { "type": "string" },
+            "Link2E": { "type": "string" },
+            "Link2F": { "type": "string" },
+            "Link2G": { "type": "string" },
+
+            "Has Column 3": { "type": "boolean" },
+            "Header 3": { "type": "string" },
+            "Link3A": { "type": "string" },
+            "Link3B": { "type": "string" },
+            "Link3C": { "type": "string" },
+            "Link3D": { "type": "string" },
+            "Link3E": { "type": "string" },
+            "Link3F": { "type": "string" },
+            "Link3G": { "type": "string" },
+
+            "Has Column 4": { "type": "boolean" },
+            "Header 4": { "type": "string" },
+            "Link4A": { "type": "string" },
+            "Link4B": { "type": "string" },
+            "Link4C": { "type": "string" },
+            "Link4D": { "type": "string" },
+            "Link4E": { "type": "string" },
+            "Link4F": { "type": "string" },
+            "Link4G": { "type": "string" },
+
+            "Has Nieuwsbrief": { "type": "boolean" }
+          },
           "additionalProperties": false
         }
       },
