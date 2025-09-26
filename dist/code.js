@@ -9,6 +9,8 @@ var mapping = {
   LogoSlider: "0d566f76593314a890563894e9a518e7802c1501", // Logo Slider
   MediaGroot: "7f0894e5f2637427637add56872aa7fdd599c243", // Media Groot
   MediaSlider: "ae3a3d3df675839c6193581bec299f5521710df9", // Media Slider
+  News: "29dea06a3f72180819b9963a0d9dafb5e7ed2f7f", // News
+  Projects: "5ad4994adbe1202718b8ba496054f8391187b24c", // Projects
 };
 
 figma.showUI(__html__, { width: 600, height: 500 });
