@@ -1,31 +1,35 @@
 # Componenten Specificatie & Beslisregels
 
-Dit document beschrijft componenten, varianten en **beslislogica**.  
-De AI moet **eerst plannen** (sitemap/secties) en daarna **selectief** JSON genereren.
+Dit document beschrijft componenten, varianten en beslislogica.
+De AI moet eerst plannen (sitemap/secties/pagina’s) en daarna selectief JSON genereren.
 
 ---
 
-## Planning & sectierichtlijnen
+## Planning & paginarichtlijnen
 
-- **Rijke one-pager**: streef naar **8–12 componenten** door hergebruik van de 6 bloktypes.
+- **Standaard**: streef naar 2–3 pagina’s, tenzij er duidelijke redenen zijn voor een one-pager.
+- **Typische pagina’s**:
+
+  - **Home** (altijd aanwezig, 4–6 blokken)
+  - **Over ons** (2–3 blokken, historie, team, visie)
+  - **Diensten/Producten** (2–4 blokken, vaak Grids en Kolommen)
+  - **Contact** (2–3 blokken, contactgegevens, locatie, CTA)
+
+- **One-pager**: alleen kiezen als de site erg klein is of er weinig content is.
+
+  - AI moet dan **kort uitleggen** waarom dit logisch is (bijv. “Er zijn weinig diensten, dus alle info past overzichtelijk op één pagina”).
+
+---
+
+## Sectierichtlijnen
+
 - **Herhaal slim**:
+
   - `Grid` kan meerdere keren (features, prijzen, team, testimonials als cards).
   - `Kolommen` voor afwisseling tekst/beeld, met `Media` varianten voor visuele variatie.
   - `EntryPostSlider` alleen als “nieuws/blog/updates” relevant is (meestal 1×).
-- **Buttons/CTAs** alleen waar zinvol (via booleans).
-- **Fintech/digitale bank (zoals “Rebank”) – aanbevolen sectie-opzet (voorbeeld)**
-  1. `Hero` (USP + primaire CTA)
-  2. `Kolommen` (voordelen + app-visual, `Media` Variant2/3)
-  3. `Grid` (kernfeatures, 3–4 kaarten)
-  4. `MediaSlider` (app-screens of cases)
-  5. `Kolommen` (veiligheid/compliance + FAQs met `Accordion list`)
-  6. `Grid` (pricing of pakketten)
-  7. `Kolommen` (social proof/testimonial + CTA)
-  8. `EntryPostSlider` (nieuws/updates) – alleen als relevant
-  9. `Grid` (FAQ in cards of extra features)
-  10. `Kolommen` (closing/CTA)
 
-> **Belangrijk:** Alle **boolean props altijd aanwezig**. Als een child/feature niet gebruikt wordt, zet de bijbehorende boolean op `false`.
+- **Buttons/CTAs** alleen waar zinvol (via booleans).
 
 ---
 
@@ -53,8 +57,9 @@ De AI moet **eerst plannen** (sitemap/secties) en daarna **selectief** JSON gene
 
 **Gebruik**
 
-- Meestal 1× bovenaan; kan soms worden overgeslagen.
+- Meestal bovenaan de Home-pagina.
 - Teksten kort en gericht op waardepropositie.
+- Kan ook terugkomen op andere pagina’s als sectie-intro.
 
 ---
 
@@ -62,11 +67,12 @@ De AI moet **eerst plannen** (sitemap/secties) en daarna **selectief** JSON gene
 
 **Props**
 
-- Geen
+- Title (string, optioneel)
 
 **Gebruik**
 
-- Groot visueel blok, optioneel; kan ook worden vervangen door `Kolommen` + `Media`.
+- Groot visueel blok, vaak gebruikt voor sfeerbeelden of locatie.
+- Kan op Home of Contact worden toegepast.
 
 ---
 
@@ -75,42 +81,33 @@ De AI moet **eerst plannen** (sitemap/secties) en daarna **selectief** JSON gene
 **Props**
 
 - Property 1 (enum: Default | Variant2)
-  - **Default**: links = Media, rechts = Content Kolommen Block
-  - **Variant2**: rechts = Media, links = Content Kolommen Block
+
+  - Default = Media links, Content rechts
+  - Variant2 = Content links, Media rechts
 
 **Children**
 
 - Media
-  - Props:
-    - Property 1 (enum: Default | Variant2 | Variant3)
-      - **Default**: 1 square image
-      - **Variant2**: 2 horizontale images
-      - **Variant3**: 1 horizontaal + 2 squares
+
+  - Props: Property 1 (Default | Variant2 | Variant3)
+
+    - Default = 1 square image
+    - Variant2 = 2 horizontale images
+    - Variant3 = 1 horizontale + 2 squares
+
 - Content Kolommen Block
-  - Props:
-    - Has Accordion (boolean)
-    - Has Text (boolean)
-  - Children (afhankelijk van booleans):
-    - Accordion list (bij `Has Accordion` = true)
-      - Props: Has Title (boolean), Title (string),
-        Text, Text 2, Text 3, Text 4, Text open item (strings)
-    - Text Element (bij `Has Text` = true)
-      - Props:
-        - Has Primary Button (boolean)
-        - Has Second Button (boolean)
-        - Has List (boolean)
-        - Has description (boolean)
-        - Title of text Block (string)
-        - Description (string)
-        - Usp Text 1, Usp text 2, Usp Text 3 (strings)
-      - Children:
-        - Button Primary (bij `Has Primary Button` = true)
-        - Button Secondary (bij `Has Second Button` = true)
+
+  - Props: Has Accordion (boolean), Has Text (boolean)
+  - Children afhankelijk van props:
+
+    - Accordion list (FAQ’s of details)
+    - Text Element (uitleg, USP’s, knoppen)
 
 **Gebruik**
 
-- Content + media mix, erg flexibel.
-- Gebruik `Accordion list` voor FAQ’s of details.
+- Zeer flexibel, kan op alle pagina’s.
+- `Accordion list` bij veelgestelde vragen.
+- `Text Element` voor afsluitende CTA’s of uitleg.
 
 ---
 
@@ -122,7 +119,8 @@ De AI moet **eerst plannen** (sitemap/secties) en daarna **selectief** JSON gene
 
 **Gebruik**
 
-- Voor meerdere visuals/cases/app-screens.
+- Voor meerdere visuals, app-screens of cases.
+- Meestal 1× toegepast op Home of Diensten.
 
 ---
 
@@ -130,20 +128,24 @@ De AI moet **eerst plannen** (sitemap/secties) en daarna **selectief** JSON gene
 
 **Props**
 
-- Property 1 (enum: Default | Variant2)
-  - **Default**: exact 3 cards
-  - **Variant2**: exact 4 cards
+- Property 1 (Default | Variant2)
+
+  - Default = exact 3 kaarten
+  - Variant2 = exact 4 kaarten
+
 - Title (string)
 
 **Children**
 
-- Inner Grid Card (3 of 4 items o.b.v. variant)
+- Inner Grid Card (3 of 4 items, afhankelijk van variant)
+
   - Props: Title (string), Description (string)
-  - Children: (optioneel) Button Primary
+  - Children: altijd exact 1 Button Primary
 
 **Gebruik**
 
-- Herbruikbaar voor features, pakketten, team, etc.
+- Voor USP’s, diensten, prijzen, team, testimonials.
+- Kan meerdere keren per site voorkomen.
 
 ---
 
@@ -155,8 +157,10 @@ De AI moet **eerst plannen** (sitemap/secties) en daarna **selectief** JSON gene
 
 **Children**
 
-- Entry Post Inner (meestal 3 items)
+- Entry Post Inner (exact 3 items)
+
   - Props:
+
     - Has title (boolean)
     - Has description (boolean)
     - Has Category (boolean)
@@ -165,11 +169,12 @@ De AI moet **eerst plannen** (sitemap/secties) en daarna **selectief** JSON gene
     - Popular (string)
     - Title of this block (string)
     - Description (string)
-  - Children: (optioneel) Button Primary
+
+  - Children: altijd exact 1 Button Primary
 
 **Gebruik**
 
-- Alleen als blog/nieuws/updates relevant is.
+- Alleen toevoegen als er een blog, nieuws of updates-sectie relevant is.
 
 ---
 
@@ -179,18 +184,23 @@ De AI moet **eerst plannen** (sitemap/secties) en daarna **selectief** JSON gene
 
 **Props**
 
-- Property 1 (enum: Default)
+- Property 1 (Default)
 - Text primary button (string) / Text Secondary Button (string)
 
 **Gebruik**
 
-- Alleen opnemen wanneer de corresponderende boolean op `true` staat in het oudercomponent (Hero of Text Element).
+- Alleen opnemen wanneer de corresponderende boolean in het oudercomponent = true.
+- Grid-cards en Post Entries bevatten altijd een primaire knop.
 
 ---
 
 ## Belangrijke regels
 
-- **Booleans altijd opnemen** en correct op `true/false` zetten.
-- **Children afstemmen op booleans** (gating).
-- **Varianten bewust kiezen** i.p.v. defaulten.
-- **Herhalen mag** om voldoende secties te bereiken.
+- **Altijd alle booleans opnemen** (true/false).
+- **Children alleen toevoegen als de booleans dat vereisen.**
+- **Varianten bewust kiezen** (niet standaard alles Default).
+- **Herhaling toegestaan** om voldoende blokken te halen (bijv. meerdere Grids).
+- **One-pager alleen toestaan met uitleg** waarom er geen extra pagina’s zijn.
+- **Multi-pager voorkeur**: Home + Contact, en vaak ook Over ons of Diensten.
+
+---
