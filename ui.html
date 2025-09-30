@@ -80,249 +80,369 @@
 
       const exampleData = [
         {
-          component: "Hero",
-          props: {
-            "Hero Title": "Welkom bij ons platform",
-            Description:
-              "Ontdek onze diensten en leer wat wij voor jou kunnen betekenen.",
-            "Usp 1": "Betrouwbaar en veilig",
-            "Usp 2": "Altijd bereikbaar",
-            "Usp 3": "Snel resultaat",
-            "Has Title": true,
-            "Has Description": true,
-            "Has Usps": true,
-            "Has Button Primary": true,
-            "Has Button Secondary": true,
-          },
-          children: [
+          page: "Home",
+          blocks: [
             {
-              component: "Button Primary",
+              component: "Hero",
               props: {
-                "Property 1": "Default",
-                "Text primary button": "Aan de slag",
-              },
-            },
-            {
-              component: "Button Secondary",
-              props: {
-                "Property 1": "Default",
-                "Text Secondary Button": "Meer informatie",
-              },
-            },
-          ],
-        },
-        {
-          component: "Kolommen",
-          props: {
-            "Property 1": "Variant2",
-          },
-          children: [
-            {
-              component: "Media",
-              props: {
-                "Property 1": "Variant3",
-              },
-            },
-            {
-              component: "Content Kolommen Block",
-              props: {
-                "Has Accordion": true,
-                "Has Text": true,
+                "Has Title": true,
+                "Hero Title": "Welkom bij onze website",
+                "Has Description": true,
+                Description:
+                  "Wij bieden oplossingen die je bedrijf vooruit helpen.",
+                "Has Usps": true,
+                "Usp 1": "Betrouwbaar",
+                "Usp 2": "Innovatief",
+                "Usp 3": "Klantgericht",
+                "Has Button Primary": true,
+                "Has Button Secondary": true,
               },
               children: [
                 {
-                  component: "Accordion list",
+                  component: "Button Primary",
                   props: {
-                    "Has Title": true,
-                    Title: "Veelgestelde vragen",
-                    Text: "Hoe werkt dit product?",
-                    "Text 2": "Welke voordelen krijg ik?",
-                    "Text 3": "Hoe kan ik starten?",
-                    "Text 4": "Is er ondersteuning?",
-                    "Text open item": "Klik om meer details te zien",
+                    "Property 1": "Default",
+                    "Text primary button": "Start nu",
                   },
                 },
                 {
-                  component: "Text Element",
+                  component: "Button Secondary",
                   props: {
-                    "Has Primary Button": true,
-                    "Has Second Button": true,
-                    "Has List": true,
-                    "Has description": true,
-                    "Title of text Block": "Onze aanpak",
-                    Description: "Wij helpen je stap voor stap vooruit.",
-                    "Usp Text 1": "Eenvoudig in gebruik",
-                    "Usp text 2": "Flexibel inzetbaar",
-                    "Usp Text 3": "Bewezen resultaat",
+                    "Property 1": "Default",
+                    "Text Secondary Button": "Lees meer",
+                  },
+                },
+              ],
+            },
+            {
+              component: "Kolommen",
+              props: { "Property 1": "Default" },
+              children: [
+                { component: "Media", props: { "Property 1": "Default" } },
+                {
+                  component: "Content Kolommen Block",
+                  props: { "Has Accordion": false, "Has Text": true },
+                  children: [
+                    {
+                      component: "Text Element",
+                      props: {
+                        "Has Primary Button": true,
+                        "Has Second Button": false,
+                        "Has List": true,
+                        "Has description": true,
+                        "Title of text Block": "Onze missie",
+                        Description: "Wij ondersteunen bedrijven bij groei.",
+                        "Usp Text 1": "Efficiënt",
+                        "Usp text 2": "Schaalbaar",
+                        "Usp Text 3": "Bewezen resultaten",
+                      },
+                      children: [
+                        {
+                          component: "Button Primary",
+                          props: {
+                            "Property 1": "Default",
+                            "Text primary button": "Ontdek meer",
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              component: "MediaGroot",
+              props: { Title: "Een blik op ons werk" },
+            },
+            {
+              component: "MediaSlider",
+              props: { Title: "Cases & beelden" },
+            },
+            {
+              component: "Grid",
+              props: { "Property 1": "Variant2", Title: "Onze diensten" },
+              children: [
+                {
+                  component: "Inner Grid Card",
+                  index: 0,
+                  props: {
+                    Title: "Consultancy",
+                    Description: "Professioneel advies",
+                    "Has button": true,
                   },
                   children: [
                     {
                       component: "Button Primary",
                       props: {
                         "Property 1": "Default",
-                        "Text primary button": "Start nu",
+                        "Text primary button": "Meer info",
                       },
                     },
+                  ],
+                },
+                {
+                  component: "Inner Grid Card",
+                  index: 1,
+                  props: {
+                    Title: "Implementatie",
+                    Description: "Snelle uitvoering",
+                    "Has button": false,
+                  },
+                },
+                {
+                  component: "Inner Grid Card",
+                  index: 2,
+                  props: {
+                    Title: "Training",
+                    Description: "Kennisdeling",
+                    "Has button": true,
+                  },
+                  children: [
                     {
-                      component: "Button Secondary",
+                      component: "Button Primary",
                       props: {
                         "Property 1": "Default",
-                        "Text Secondary Button": "Lees verder",
+                        "Text primary button": "Start training",
+                      },
+                    },
+                  ],
+                },
+                {
+                  component: "Inner Grid Card",
+                  index: 3,
+                  props: {
+                    Title: "Support",
+                    Description: "Altijd bereikbaar",
+                    "Has button": false,
+                  },
+                },
+              ],
+            },
+            {
+              component: "EntryPostSlider",
+              props: { Title: "Laatste nieuws" },
+              children: [
+                {
+                  component: "Entry Post Inner",
+                  index: 0,
+                  props: {
+                    "Has title": true,
+                    "Has description": true,
+                    "Has Category": true,
+                    "Has Popular": false,
+                    "Category Name": "Nieuws",
+                    Popular: "",
+                    "Title of this block": "Nieuwe samenwerking",
+                    Description: "Wij werken samen met een marktleider.",
+                  },
+                  children: [
+                    {
+                      component: "Button Primary",
+                      props: {
+                        "Property 1": "Default",
+                        "Text primary button": "Lees meer",
+                      },
+                    },
+                  ],
+                },
+                {
+                  component: "Entry Post Inner",
+                  index: 1,
+                  props: {
+                    "Has title": true,
+                    "Has description": true,
+                    "Has Category": true,
+                    "Has Popular": true,
+                    "Category Name": "Blog",
+                    Popular: "Hot",
+                    "Title of this block": "Tips & tricks",
+                    Description: "Handige tips voor ondernemers.",
+                  },
+                  children: [
+                    {
+                      component: "Button Primary",
+                      props: {
+                        "Property 1": "Default",
+                        "Text primary button": "Lees blog",
+                      },
+                    },
+                  ],
+                },
+                {
+                  component: "Entry Post Inner",
+                  index: 2,
+                  props: {
+                    "Has title": true,
+                    "Has description": true,
+                    "Has Category": true,
+                    "Has Popular": false,
+                    "Category Name": "Events",
+                    Popular: "",
+                    "Title of this block": "Komende events",
+                    Description: "Bekijk onze agenda.",
+                  },
+                  children: [
+                    {
+                      component: "Button Primary",
+                      props: {
+                        "Property 1": "Default",
+                        "Text primary button": "Bekijk events",
                       },
                     },
                   ],
                 },
               ],
             },
-          ],
-        },
-        {
-          component: "MediaGroot",
-          props: {
-            Title: "Inspirerende beelden",
-          },
-        },
-        {
-          component: "MediaSlider",
-          props: {
-            Title: "Onze projecten",
-          },
-        },
-        {
-          component: "Grid",
-          props: {
-            "Property 1": "Default",
-            Title: "Wat wij bieden",
-          },
-          children: [
             {
-              component: "Inner Grid Card",
-              index: 0,
-              props: {
-                Title: "Persoonlijke begeleiding",
-                Description: "Wij staan altijd klaar om je te ondersteunen.",
-              },
-              children: [
-                {
-                  component: "Button Primary",
-                  props: {
-                    "Property 1": "Default",
-                    "Text primary button": "Ontdek meer",
-                  },
-                },
-              ],
+              component: "LogoSlider",
+              props: { Title: "Vertrouwd door" },
             },
             {
-              component: "Inner Grid Card",
-              index: 1,
+              component: "CalltoAction",
               props: {
-                Title: "Flexibele oplossingen",
-                Description: "Oplossingen die passen bij jouw situatie.",
-              },
-              children: [
-                {
-                  component: "Button Primary",
-                  props: {
-                    "Property 1": "Default",
-                    "Text primary button": "Ontdek meer",
-                  },
-                },
-              ],
-            },
-            {
-              component: "Inner Grid Card",
-              index: 2,
-              props: {
-                Title: "Snel resultaat",
-                Description: "Ervaar direct de voordelen van onze aanpak.",
-              },
-              children: [
-                {
-                  component: "Button Primary",
-                  props: {
-                    "Property 1": "Default",
-                    "Text primary button": "Ontdek meer",
-                  },
-                },
-              ],
-            },
-          ],
-        },
-        {
-          component: "EntryPostSlider",
-          props: {
-            Title: "Laatste updates",
-          },
-          children: [
-            {
-              component: "Entry Post Inner",
-              index: 0,
-              props: {
-                "Has title": true,
-                "Has description": true,
-                "Has Category": true,
-                "Has Popular": true,
-                "Category Name": "Nieuws",
-                Popular: "Aanbevolen",
-                "Title of this block": "Nieuwe functies gelanceerd",
+                "Has Title": true,
+                Title: "Klaar om te starten?",
+                "Has Description": true,
                 Description:
-                  "Ontdek de nieuwste verbeteringen in ons platform.",
+                  "Neem contact op en ontdek wat we voor jou kunnen doen.",
+                "Has Usps": true,
+                "Usp 1": "Gratis intake",
+                "Usp 2": "Persoonlijk plan",
+                "Usp 3": "Snelle start",
+                "Has Button Primary": true,
+                "Has Button Secondary": false,
               },
               children: [
                 {
                   component: "Button Primary",
                   props: {
                     "Property 1": "Default",
-                    "Text primary button": "Lees meer",
+                    "Text primary button": "Contact opnemen",
                   },
                 },
               ],
             },
             {
-              component: "Entry Post Inner",
-              index: 1,
+              component: "Footer",
               props: {
-                "Has title": true,
-                "Has description": true,
-                "Has Category": true,
-                "Has Popular": false,
-                "Category Name": "Blog",
-                Popular: "",
-                "Title of this block": "Tips voor een betere workflow",
-                Description: "Verbeter je productiviteit met deze suggesties.",
+                "Has Column 1": true,
+                "Header 1": "Bedrijf",
+                Link1A: "Over ons",
+                Link1B: "Team",
+                Link1C: "Vacatures",
+                Link1D: "",
+                Link1E: "",
+                Link1F: "",
+                Link1G: "",
+                "Has Column 2": true,
+                "Header 2": "Diensten",
+                Link2A: "Consultancy",
+                Link2B: "Training",
+                Link2C: "",
+                Link2D: "",
+                Link2E: "",
+                Link2F: "",
+                Link2G: "",
+                "Has Column 3": false,
+                "Header 3": "",
+                "Has Column 4": false,
+                "Header 4": "",
+                "Has Nieuwsbrief": true,
+              },
+            },
+          ],
+        },
+        {
+          page: "Over ons",
+          blocks: [
+            {
+              component: "Projects",
+              props: {
+                Title: "Onze projecten",
+                "Example category": "Technologie",
+                "Example header": "Innovatieplatform",
+                "Example description":
+                  "Een groot project waar we trots op zijn.",
+              },
+              children: Array.from({ length: 8 }, (_, i) => ({
+                component: "Project Card",
+                props: {
+                  Category: "Case " + (i + 1),
+                  "Project header": "Projecttitel " + (i + 1),
+                  Description: "Beschrijving van project " + (i + 1),
+                },
+              })),
+            },
+            {
+              component: "News",
+              props: {
+                Title: "Laatste artikelen",
+                Description: "Lees het laatste nieuws en onze blogs.",
+              },
+              children: Array.from({ length: 9 }, (_, i) => ({
+                component: "News Card",
+                props: {
+                  Category: i % 2 === 0 ? "Nieuws" : "Blog",
+                  Date: "2025-09-" + String(i + 10).padStart(2, "0"),
+                  Description: "Artikel " + (i + 1) + " beschrijving.",
+                },
+              })),
+            },
+            {
+              component: "CalltoAction",
+              props: {
+                "Has Title": true,
+                Title: "Neem contact op",
+                "Has Description": false,
+                Description: "",
+                "Has Usps": false,
+                "Has Button Primary": true,
+                "Has Button Secondary": true,
               },
               children: [
                 {
                   component: "Button Primary",
                   props: {
                     "Property 1": "Default",
-                    "Text primary button": "Lees meer",
+                    "Text primary button": "Contact",
+                  },
+                },
+                {
+                  component: "Button Secondary",
+                  props: {
+                    "Property 1": "Default",
+                    "Text Secondary Button": "Meer info",
                   },
                 },
               ],
             },
             {
-              component: "Entry Post Inner",
-              index: 2,
+              component: "Footer",
               props: {
-                "Has title": true,
-                "Has description": true,
-                "Has Category": true,
-                "Has Popular": true,
-                "Category Name": "Events",
-                Popular: "Populair",
-                "Title of this block": "Komende evenementen",
-                Description: "Bekijk onze agenda en meld je aan.",
+                "Has Column 1": true,
+                "Header 1": "Over ons",
+                Link1A: "Missie",
+                Link1B: "Visie",
+                Link1C: "",
+                Link1D: "",
+                Link1E: "",
+                Link1F: "",
+                Link1G: "",
+                "Has Column 2": false,
+                "Header 2": "",
+                "Has Column 3": true,
+                "Header 3": "Contact",
+                Link3A: "Email",
+                Link3B: "Adres",
+                Link3C: "Telefoon",
+                Link3D: "",
+                Link3E: "",
+                Link3F: "",
+                Link3G: "",
+                "Has Column 4": false,
+                "Header 4": "",
+                "Has Nieuwsbrief": false,
               },
-              children: [
-                {
-                  component: "Button Primary",
-                  props: {
-                    "Property 1": "Default",
-                    "Text primary button": "Lees meer",
-                  },
-                },
-              ],
             },
           ],
         },

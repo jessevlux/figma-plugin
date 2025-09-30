@@ -9,31 +9,13 @@
       "page": { "type": "string" },
       "blocks": {
         "type": "array",
-        "items": { "$ref": "#/definitions/Component" }
+        "items": { "$ref": "#/definitions/TopLevelComponent" }
       }
     },
     "additionalProperties": false
   },
   "definitions": {
-    "Component": {
-      "type": "object",
-      "required": ["component", "props"],
-      "properties": {
-        "component": { "type": "string" },
-        "props": { "type": "object" },
-        "children": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/Component" }
-        },
-        "index": { "type": "integer" }
-      },
-      "allOf": [
-        { "$ref": "#/definitions/ComponentUnion" }
-      ],
-      "additionalProperties": false
-    },
-
-    "ComponentUnion": {
+    "TopLevelComponent": {
       "oneOf": [
         { "$ref": "#/definitions/Hero" },
         { "$ref": "#/definitions/MediaGroot" },
@@ -41,17 +23,11 @@
         { "$ref": "#/definitions/MediaSlider" },
         { "$ref": "#/definitions/Grid" },
         { "$ref": "#/definitions/EntryPostSlider" },
-        { "$ref": "#/definitions/ButtonPrimary" },
-        { "$ref": "#/definitions/ButtonSecondary" },
-        { "$ref": "#/definitions/AccordionList" },
-        { "$ref": "#/definitions/TextElement" },
-        { "$ref": "#/definitions/InnerGridCard" },
-        { "$ref": "#/definitions/EntryPostInner" },
-        { "$ref": "#/definitions/Media" },
-        { "$ref": "#/definitions/ContentKolommenBlock" },
         { "$ref": "#/definitions/LogoSlider" },
         { "$ref": "#/definitions/CalltoAction" },
-        { "$ref": "#/definitions/Footer" }
+        { "$ref": "#/definitions/Footer" },
+        { "$ref": "#/definitions/Projects" },
+        { "$ref": "#/definitions/News" }
       ]
     },
 
@@ -62,13 +38,13 @@
           "type": "object",
           "properties": {
             "Has Title": { "type": "boolean" },
-            "Description": { "type": "string" },
             "Hero Title": { "type": "string" },
+            "Has Description": { "type": "boolean" },
+            "Description": { "type": "string" },
+            "Has Usps": { "type": "boolean" },
             "Usp 1": { "type": "string" },
             "Usp 2": { "type": "string" },
             "Usp 3": { "type": "string" },
-            "Has Description": { "type": "boolean" },
-            "Has Usps": { "type": "boolean" },
             "Has Button Primary": { "type": "boolean" },
             "Has Button Secondary": { "type": "boolean" }
           },
@@ -91,54 +67,6 @@
           }
         }
       },
-      "allOf": [
-        {
-          "if": {
-            "properties": {
-              "props": { "properties": { "Has Button Primary": { "const": true } } }
-            }
-          },
-          "then": {
-            "properties": {
-              "children": {
-                "type": "array",
-                "contains": { "properties": { "component": { "const": "Button Primary" } } }
-              }
-            }
-          },
-          "else": {
-            "properties": {
-              "children": {
-                "type": "array",
-                "not": { "contains": { "properties": { "component": { "const": "Button Primary" } } } }
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "props": { "properties": { "Has Button Secondary": { "const": true } } }
-            }
-          },
-          "then": {
-            "properties": {
-              "children": {
-                "type": "array",
-                "contains": { "properties": { "component": { "const": "Button Secondary" } } }
-              }
-            }
-          },
-          "else": {
-            "properties": {
-              "children": {
-                "type": "array",
-                "not": { "contains": { "properties": { "component": { "const": "Button Secondary" } } } }
-              }
-            }
-          }
-        }
-      ],
       "additionalProperties": false
     },
 
@@ -161,8 +89,7 @@
           "properties": {
             "Property 1": {
               "type": "string",
-              "enum": ["Default", "Variant2"],
-              "description": "Default = Media links/Content rechts; Variant2 = omgekeerd"
+              "enum": ["Default", "Variant2"]
             }
           },
           "required": ["Property 1"],
@@ -189,8 +116,7 @@
           "properties": {
             "Property 1": {
               "type": "string",
-              "enum": ["Default", "Variant2", "Variant3"],
-              "description": "Default = 1 square image; Variant2 = 2 horizontale images; Variant3 = 1 horizontaal + 2 squares"
+              "enum": ["Default", "Variant2", "Variant3"]
             }
           },
           "required": ["Property 1"],
@@ -288,9 +214,7 @@
         "component": { "const": "MediaSlider" },
         "props": {
           "type": "object",
-          "properties": {
-            "Title": { "type": "string" }
-          },
+          "properties": { "Title": { "type": "string" } },
           "additionalProperties": false
         }
       },
@@ -305,8 +229,7 @@
           "properties": {
             "Property 1": {
               "type": "string",
-              "enum": ["Default", "Variant2"],
-              "description": "Default = 3 cards; Variant2 = 4 cards"
+              "enum": ["Default", "Variant2", "Variant3"]
             },
             "Title": { "type": "string" }
           },
@@ -318,32 +241,6 @@
           "items": { "$ref": "#/definitions/InnerGridCard" }
         }
       },
-      "allOf": [
-        {
-          "if": {
-            "properties": {
-              "props": { "properties": { "Property 1": { "const": "Default" } } }
-            }
-          },
-          "then": {
-            "properties": {
-              "children": { "type": "array", "minItems": 3, "maxItems": 3 }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "props": { "properties": { "Property 1": { "const": "Variant2" } } }
-            }
-          },
-          "then": {
-            "properties": {
-              "children": { "type": "array", "minItems": 4, "maxItems": 4 }
-            }
-          }
-        }
-      ],
       "additionalProperties": false
     },
 
@@ -355,14 +252,16 @@
           "type": "object",
           "properties": {
             "Title": { "type": "string" },
-            "Description": { "type": "string" }
+            "Description": { "type": "string" },
+            "Has button": { "type": "boolean" }
           },
+          "required": ["Has button"],
           "additionalProperties": false
         },
         "children": {
           "type": "array",
           "items": { "$ref": "#/definitions/ButtonPrimary" },
-          "minItems": 1,
+          "minItems": 0,
           "maxItems": 1
         }
       },
@@ -375,9 +274,7 @@
         "component": { "const": "EntryPostSlider" },
         "props": {
           "type": "object",
-          "properties": {
-            "Title": { "type": "string" }
-          },
+          "properties": { "Title": { "type": "string" } },
           "additionalProperties": false
         },
         "children": {
@@ -420,46 +317,12 @@
       "additionalProperties": false
     },
 
-    "ButtonPrimary": {
-      "properties": {
-        "component": { "const": "Button Primary" },
-        "props": {
-          "type": "object",
-          "properties": {
-            "Property 1": { "type": "string", "enum": ["Default"] },
-            "Text primary button": { "type": "string" }
-          },
-          "required": ["Property 1", "Text primary button"],
-          "additionalProperties": false
-        }
-      },
-      "additionalProperties": false
-    },
-
-    "ButtonSecondary": {
-      "properties": {
-        "component": { "const": "Button Secondary" },
-        "props": {
-          "type": "object",
-          "properties": {
-            "Property 1": { "type": "string", "enum": ["Default"] },
-            "Text Secondary Button": { "type": "string" }
-          },
-          "required": ["Property 1", "Text Secondary Button"],
-          "additionalProperties": false
-        }
-      },
-      "additionalProperties": false
-    },
-
     "LogoSlider": {
       "properties": {
         "component": { "const": "LogoSlider" },
         "props": {
           "type": "object",
-          "properties": {
-            "Title": { "type": "string" }
-          },
+          "properties": { "Title": { "type": "string" } },
           "additionalProperties": false
         }
       },
@@ -472,17 +335,20 @@
         "props": {
           "type": "object",
           "properties": {
+            "Has Title": { "type": "boolean" },
             "Title": { "type": "string" },
+            "Has Description": { "type": "boolean" },
+            "Description": { "type": "string" },
+            "Has Usps": { "type": "boolean" },
             "Usp 1": { "type": "string" },
             "Usp 2": { "type": "string" },
             "Usp 3": { "type": "string" },
-            "Has Title": { "type": "boolean" },
-            "Has Usps": { "type": "boolean" },
             "Has Button Primary": { "type": "boolean" },
             "Has Button Secondary": { "type": "boolean" }
           },
           "required": [
             "Has Title",
+            "Has Description",
             "Has Usps",
             "Has Button Primary",
             "Has Button Secondary"
@@ -550,6 +416,121 @@
 
             "Has Nieuwsbrief": { "type": "boolean" }
           },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "Projects": {
+      "properties": {
+        "component": { "const": "Projects" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Title": { "type": "string" },
+            "Example category": { "type": "string" },
+            "Example header": { "type": "string" },
+            "Example description": { "type": "string" },
+            "Has example project": {"type": "boolean"},
+            "Has description": {"type": "boolean"},
+            "Description": {"type": "string"}
+          },
+          "required": ["Title"],
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ProjectCard" },
+          "minItems": 8,
+          "maxItems": 8
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "ProjectCard": {
+      "properties": {
+        "component": { "const": "Project Card" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Category": { "type": "string" },
+            "Project header": { "type": "string" },
+            "Description": { "type": "string" }
+          },
+          "required": ["Category", "Project header", "Description"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "News": {
+      "properties": {
+        "component": { "const": "News" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Title": { "type": "string" },
+            "Description": { "type": "string" }
+          },
+          "required": ["Title", "Description"],
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/NewsCard" },
+          "minItems": 9,
+          "maxItems": 9
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "NewsCard": {
+      "properties": {
+        "component": { "const": "News Card" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Category": { "type": "string" },
+            "Date": { "type": "string" },
+            "Description": { "type": "string" }
+          },
+          "required": ["Category", "Date", "Description"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "ButtonPrimary": {
+      "properties": {
+        "component": { "const": "Button Primary" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Property 1": { "type": "string", "enum": ["Default"] },
+            "Text primary button": { "type": "string" }
+          },
+          "required": ["Property 1", "Text primary button"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "ButtonSecondary": {
+      "properties": {
+        "component": { "const": "Button Secondary" },
+        "props": {
+          "type": "object",
+          "properties": {
+            "Property 1": { "type": "string", "enum": ["Default"] },
+            "Text Secondary Button": { "type": "string" }
+          },
+          "required": ["Property 1", "Text Secondary Button"],
           "additionalProperties": false
         }
       },

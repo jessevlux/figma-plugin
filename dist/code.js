@@ -122,7 +122,7 @@ function applySpecToInstance(instance, spec, pathLabel) {
 // maakt frame voor 1 pagina (wit, auto-layout) met horizontale offset
 function createPageFrame(pageName, index) {
   var f = figma.createFrame();
-  f.name = "Wireframe – " + pageName;
+  f.name = pageName;
   f.layoutMode = "VERTICAL";
   f.primaryAxisSizingMode = "AUTO";
   f.counterAxisSizingMode = "AUTO";
@@ -244,7 +244,7 @@ figma.ui.onmessage = async function (msg) {
     var removed = false;
     for (var i = pageChildren.length - 1; i >= 0; i--) {
       var n = pageChildren[i];
-      if (n.type === "FRAME" && n.name.startsWith("Wireframe")) {
+      if (n.type === "FRAME") {
         n.remove();
         removed = true;
       }
