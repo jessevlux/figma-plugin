@@ -1,4 +1,4 @@
-// ============== mapping ==============
+// ============== hardcoded mapping (voor gebruik in alle bestanden) ==============
 var mapping = {
   CalltoAction: "8a16e7ae870332d3ee5dee0b0a7bbe36161b78e4", // Call to Action
   EntryPostSlider: "f6e67fbecfc8796ca7ec65ddaa9f6cc81cea0b7d", // Entry/Post Slider
@@ -13,8 +13,9 @@ var mapping = {
   Projects: "5ad4994adbe1202718b8ba496054f8391187b24c", // Projects
 };
 
-// ============== whitelist & mapping builder ==============
-var whitelist = [
+// ============== whitelist & mapping builder (voor library bestand) ==============
+// Default whitelist (gebruikt als fallback)
+var defaultWhitelist = [
   "Hero",
   "Media Groot",
   "Kolommen",
@@ -28,56 +29,120 @@ var whitelist = [
   "News",
 ];
 
-var whitelistOn = true;
+// Whitelist opslaan in Figma (gedeeld met hele team)
+function saveWhitelist(whitelist) {
+  figma.root.setPluginData("componentWhitelist", JSON.stringify(whitelist));
+}
 
-async function buildMapping() {
-  // Load all pages first if using dynamic-page access
+// Whitelist laden uit Figma
+function loadWhitelist() {
+  var saved = figma.root.getPluginData("componentWhitelist");
+  if (saved) {
+    try {
+      return JSON.parse(saved);
+    } catch (e) {
+      return defaultWhitelist;
+    }
+  }
+  return defaultWhitelist;
+}
+
+// Haal alle componenten op met hun whitelist status
+async function getAllComponents() {
+  var nodes = [];
+
   try {
     await figma.loadAllPagesAsync();
   } catch (e) {
-    // Ignore error if loadAllPagesAsync is not needed
+    // Niet beschikbaar in dit bestand
+    console.log("loadAllPagesAsync niet beschikbaar");
   }
 
-  var nodes = figma.root.findAll(function (n) {
-    return (n.type === "COMPONENT_SET" || n.type === "COMPONENT") && n.key;
-  });
+  try {
+    nodes = figma.root.findAll(function (n) {
+      return (n.type === "COMPONENT_SET" || n.type === "COMPONENT") && n.key;
+    });
+  } catch (e) {
+    // findAll faalt - waarschijnlijk niet in library bestand
+    console.log("Component discovery niet mogelijk in dit bestand");
+    return [];
+  }
 
-  var items = [];
+  var whitelist = loadWhitelist();
+  var components = [];
+  var seen = {};
+
   for (var i = 0; i < nodes.length; i++) {
     var n = nodes[i];
-    if (!whitelistOn || whitelist.includes(n.name)) {
-      items.push({ name: n.name, key: n.key });
+    // Voorkom duplicaten
+    if (!seen[n.name]) {
+      seen[n.name] = true;
+      components.push({
+        name: n.name,
+        key: n.key,
+        enabled: whitelist.includes(n.name),
+      });
     }
   }
 
-  if (items.length === 0) {
-    return "// Geen componenten gevonden (check whitelist-instellingen)";
-  }
-
-  items.sort(function (a, b) {
+  components.sort(function (a, b) {
     return a.name.localeCompare(b.name);
   });
 
-  var out = "const mapping = {\n";
-  for (var j = 0; j < items.length; j++) {
-    var item = items[j];
-    var simple = item.name.replace(/\s+/g, "").replace(/\//g, "");
-    out += "  " + simple + ': "' + item.key + '", // ' + item.name + "\n";
-  }
-  out += "};";
-  return out;
+  return components;
 }
 
-figma.showUI(__html__, { width: 600, height: 500 });
+// Genereer mapping code voor display
+async function buildMappingDisplay() {
+  try {
+    var components = await getAllComponents();
+    var enabled = components.filter(function (c) {
+      return c.enabled;
+    });
 
-// Stuur initiële mapping naar UI (async)
-(async function () {
-  var initialMapping = await buildMapping();
-  figma.ui.postMessage({
-    type: "mapping",
-    content: initialMapping,
-  });
-})();
+    if (enabled.length === 0) {
+      return "// Geen componenten geselecteerd";
+    }
+
+    var out = "const mapping = {\n";
+    for (var j = 0; j < enabled.length; j++) {
+      var item = enabled[j];
+      var simple = item.name.replace(/\s+/g, "").replace(/\//g, "");
+      out += "  " + simple + ': "' + item.key + '", // ' + item.name + "\n";
+    }
+    out += "};";
+    return out;
+  } catch (e) {
+    console.log("buildMappingDisplay fout:", e);
+    return "// Niet beschikbaar in dit bestand";
+  }
+}
+
+// Genereer runtime mapping object (niet gebruikt - we gebruiken hardcoded mapping)
+async function buildMappingObject() {
+  try {
+    var components = await getAllComponents();
+    var mappingObj = {};
+
+    for (var i = 0; i < components.length; i++) {
+      var comp = components[i];
+      if (comp.enabled) {
+        var simple = comp.name.replace(/\s+/g, "").replace(/\//g, "");
+        mappingObj[simple] = comp.key;
+      }
+    }
+
+    return mappingObj;
+  } catch (e) {
+    console.log("buildMappingObject fout:", e);
+    return {};
+  }
+}
+
+figma.showUI(__html__, { width: 750, height: 600 });
+
+// NIET automatisch laden - crashes voorkomen
+// Component discovery gebeurt alleen on-demand wanneer de gebruiker de Component Keys tab opent
 
 // ============== helpers ==============
 function buildNameToIdFromInstance(instance) {
@@ -318,22 +383,141 @@ figma.ui.onmessage = async function (msg) {
     );
   }
 
-  if (msg.type === "toggle-whitelist") {
-    whitelistOn = msg.value;
-    buildMapping().then(function (content) {
-      figma.ui.postMessage({
-        type: "mapping",
-        content: content,
-      });
-    });
+  if (msg.type === "toggle-component") {
+    try {
+      var whitelist = loadWhitelist();
+      var componentName = msg.name;
+      var enabled = msg.enabled;
+
+      if (enabled && !whitelist.includes(componentName)) {
+        whitelist.push(componentName);
+      } else if (!enabled && whitelist.includes(componentName)) {
+        whitelist = whitelist.filter(function (name) {
+          return name !== componentName;
+        });
+      }
+
+      saveWhitelist(whitelist);
+
+      // Stuur update terug naar UI
+      getAllComponents()
+        .then(function (components) {
+          figma.ui.postMessage({
+            type: "components",
+            components: components,
+          });
+        })
+        .catch(function (e) {
+          console.warn("Kon componenten niet updaten:", e);
+        });
+
+      buildMappingDisplay()
+        .then(function (content) {
+          figma.ui.postMessage({
+            type: "mapping",
+            content: content,
+          });
+        })
+        .catch(function (e) {
+          console.warn("Kon mapping niet updaten:", e);
+        });
+    } catch (e) {
+      console.error("Toggle component fout:", e);
+    }
   }
 
   if (msg.type === "request-mapping") {
-    buildMapping().then(function (content) {
-      figma.ui.postMessage({
-        type: "mapping",
-        content: content,
-      });
-    });
+    try {
+      getAllComponents()
+        .then(function (components) {
+          figma.ui.postMessage({
+            type: "components",
+            components: components,
+          });
+        })
+        .catch(function (e) {
+          figma.ui.postMessage({
+            type: "components",
+            components: [],
+          });
+          figma.ui.postMessage({
+            type: "mapping",
+            content: "// Niet beschikbaar - open dit in het library bestand",
+          });
+        });
+
+      buildMappingDisplay()
+        .then(function (content) {
+          figma.ui.postMessage({
+            type: "mapping",
+            content: content,
+          });
+        })
+        .catch(function (e) {
+          console.warn("Kon mapping niet genereren:", e);
+        });
+    } catch (e) {
+      console.error("Request mapping fout:", e);
+    }
+  }
+
+  if (msg.type === "select-all") {
+    try {
+      getAllComponents()
+        .then(function (components) {
+          var allNames = components.map(function (c) {
+            return c.name;
+          });
+          saveWhitelist(allNames);
+
+          return getAllComponents();
+        })
+        .then(function (components) {
+          figma.ui.postMessage({
+            type: "components",
+            components: components,
+          });
+
+          return buildMappingDisplay();
+        })
+        .then(function (content) {
+          figma.ui.postMessage({
+            type: "mapping",
+            content: content,
+          });
+        })
+        .catch(function (e) {
+          console.warn("Select all fout:", e);
+        });
+    } catch (e) {
+      console.error("Select all fout:", e);
+    }
+  }
+
+  if (msg.type === "select-none") {
+    try {
+      saveWhitelist([]);
+
+      getAllComponents()
+        .then(function (components) {
+          figma.ui.postMessage({
+            type: "components",
+            components: components,
+          });
+
+          return buildMappingDisplay();
+        })
+        .then(function (content) {
+          figma.ui.postMessage({
+            type: "mapping",
+            content: content,
+          });
+        })
+        .catch(function (e) {
+          console.warn("Select none fout:", e);
+        });
+    } catch (e) {
+      console.error("Select none fout:", e);
+    }
   }
 };

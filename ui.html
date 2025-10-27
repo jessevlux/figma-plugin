@@ -65,10 +65,10 @@
       }
       pre {
         width: 100%;
-        height: 320px;
+        height: 200px;
         box-sizing: border-box;
         font-family: ui-monospace, monospace;
-        font-size: 13px;
+        font-size: 12px;
         background: #252526;
         color: #dcdcdc;
         border: 1px solid #3c3c3c;
@@ -77,6 +77,48 @@
         overflow: auto;
         white-space: pre-wrap;
         margin: 0;
+      }
+      .component-list {
+        width: 100%;
+        height: 240px;
+        box-sizing: border-box;
+        background: #252526;
+        border: 1px solid #3c3c3c;
+        border-radius: 8px;
+        padding: 12px;
+        overflow-y: auto;
+        margin-bottom: 16px;
+      }
+      .component-item {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        margin-bottom: 4px;
+        border-radius: 4px;
+        transition: background 0.2s;
+      }
+      .component-item:hover {
+        background: #2d2d30;
+      }
+      .component-item input[type="checkbox"] {
+        margin-right: 10px;
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+      }
+      .component-item label {
+        flex: 1;
+        cursor: pointer;
+        font-size: 13px;
+        color: #e0e0e0;
+      }
+      .stats {
+        margin-top: 12px;
+        padding: 12px;
+        background: #252526;
+        border-radius: 6px;
+        font-size: 12px;
+        color: #aaa;
       }
       .row {
         display: flex;
@@ -139,17 +181,39 @@
     </div>
 
     <div id="keys-content" class="tab-content">
-      <h3>Component Keys Mapping</h3>
-      <pre id="mapping">Laden...</pre>
+      <h3>Selecteer Componenten</h3>
+
+      <div class="component-list" id="componentList">
+        <div style="text-align: center; padding: 20px; color: #aaa">
+          Laden...
+        </div>
+      </div>
 
       <div class="row">
-        <button id="toggle" class="primary">Whitelist: Aan</button>
+        <button id="selectAll" class="primary">Alles selecteren</button>
+        <button id="selectNone">Alles deselecteren</button>
         <button id="refresh">Ververs</button>
       </div>
 
+      <div class="stats" id="stats">0 van 0 componenten geselecteerd</div>
+
+      <h3 style="margin-top: 20px">Gegenereerde Mapping</h3>
+      <pre id="mapping">// Selecteer componenten hierboven</pre>
+
+      <button
+        id="copyMapping"
+        style="width: 100%; margin-top: 8px"
+        class="primary"
+      >
+        📋 Kopieer Mapping
+      </button>
+
       <div class="hint">
-        Deze mapping wordt gebruikt voor de wireframe generator. Whitelist
-        filtert alleen de belangrijkste componenten.
+        <strong>⚠️ Let op:</strong> Deze functie werkt alleen in het
+        <strong>Boilerplate bestand</strong> waar de componenten zijn
+        gedefinieerd en gepublished.<br />
+        Kopieer de gegenereerde mapping hierboven naar
+        <code>dist/code.js</code> om de wireframe generator bij te werken.
       </div>
     </div>
 
@@ -580,32 +644,113 @@
       });
 
       // ============== Component Keys Tab ==============
-      let whitelistOn = true;
+      let allComponents = [];
 
-      document.getElementById("toggle").onclick = () => {
-        whitelistOn = !whitelistOn;
-        parent.postMessage(
-          { pluginMessage: { type: "toggle-whitelist", value: whitelistOn } },
-          "*"
-        );
-        document.getElementById("toggle").innerText =
-          "Whitelist: " + (whitelistOn ? "Aan" : "Uit");
+      function renderComponents(components) {
+        allComponents = components;
+        const list = document.getElementById("componentList");
+
+        if (!components || components.length === 0) {
+          list.innerHTML =
+            '<div style="text-align: center; padding: 40px 20px; color: #aaa; line-height: 1.6;">' +
+            "⚠️ Geen componenten gevonden<br><br>" +
+            '<span style="font-size: 12px;">Deze functie werkt alleen in het <strong>library bestand</strong>.<br>' +
+            "Open de plugin daar om component keys te beheren.</span>" +
+            "</div>";
+          return;
+        }
+
+        list.innerHTML = "";
+        components.forEach((comp) => {
+          const item = document.createElement("div");
+          item.className = "component-item";
+
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.id = "comp-" + comp.name.replace(/[^a-zA-Z0-9]/g, "_");
+          checkbox.checked = comp.enabled;
+          checkbox.addEventListener("change", () => {
+            parent.postMessage(
+              {
+                pluginMessage: {
+                  type: "toggle-component",
+                  name: comp.name,
+                  enabled: checkbox.checked,
+                },
+              },
+              "*"
+            );
+          });
+
+          const label = document.createElement("label");
+          label.htmlFor = checkbox.id;
+          label.textContent = comp.name;
+          label.addEventListener("click", (e) => {
+            if (e.target === label) {
+              checkbox.checked = !checkbox.checked;
+              checkbox.dispatchEvent(new Event("change"));
+            }
+          });
+
+          item.appendChild(checkbox);
+          item.appendChild(label);
+          list.appendChild(item);
+        });
+
+        updateStats();
+      }
+
+      function updateStats() {
+        const enabled = allComponents.filter((c) => c.enabled).length;
+        const total = allComponents.length;
+        document.getElementById("stats").innerText =
+          enabled + " van " + total + " componenten geselecteerd";
+      }
+
+      document.getElementById("selectAll").onclick = () => {
+        parent.postMessage({ pluginMessage: { type: "select-all" } }, "*");
+      };
+
+      document.getElementById("selectNone").onclick = () => {
+        parent.postMessage({ pluginMessage: { type: "select-none" } }, "*");
       };
 
       document.getElementById("refresh").onclick = () => {
         parent.postMessage({ pluginMessage: { type: "request-mapping" } }, "*");
       };
 
-      // Receive mapping from plugin
+      document.getElementById("copyMapping").onclick = () => {
+        const mappingText = document.getElementById("mapping").innerText;
+        navigator.clipboard
+          .writeText(mappingText)
+          .then(() => {
+            const btn = document.getElementById("copyMapping");
+            const originalText = btn.innerText;
+            btn.innerText = "✅ Gekopieerd!";
+            setTimeout(() => {
+              btn.innerText = originalText;
+            }, 2000);
+          })
+          .catch(() => {
+            alert("Kon niet kopiëren. Selecteer en kopieer handmatig.");
+          });
+      };
+
+      // Receive messages from plugin
       onmessage = (event) => {
         const msg = event.data.pluginMessage;
+
+        if (msg.type === "components") {
+          renderComponents(msg.components);
+        }
+
         if (msg.type === "mapping") {
           document.getElementById("mapping").innerText = msg.content;
         }
       };
 
-      // Request initial mapping when UI loads
-      parent.postMessage({ pluginMessage: { type: "request-mapping" } }, "*");
+      // NIET automatisch laden bij opstarten - voorkomt crashes
+      // Data wordt alleen geladen wanneer de gebruiker de Component Keys tab opent
     </script>
   </body>
 </html>
