@@ -2,14 +2,46 @@
 <html lang="nl">
   <head>
     <meta charset="utf-8" />
-    <title>Wireframe JSON</title>
+    <title>Wireframe Plugin</title>
     <style>
       body {
         font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial;
         margin: 0;
-        padding: 20px;
+        padding: 0;
         background: #1e1e1e;
         color: #e0e0e0;
+      }
+      .tabs {
+        display: flex;
+        background: #252526;
+        border-bottom: 1px solid #3c3c3c;
+      }
+      .tab {
+        flex: 1;
+        padding: 14px 20px;
+        border: none;
+        background: transparent;
+        color: #aaa;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s;
+      }
+      .tab:hover {
+        color: #e0e0e0;
+        background: #2d2d30;
+      }
+      .tab.active {
+        color: #fff;
+        border-bottom-color: #007acc;
+      }
+      .tab-content {
+        display: none;
+        padding: 20px;
+      }
+      .tab-content.active {
+        display: block;
       }
       h3 {
         margin: 0 0 16px;
@@ -31,6 +63,21 @@
         resize: none;
         outline: none;
       }
+      pre {
+        width: 100%;
+        height: 320px;
+        box-sizing: border-box;
+        font-family: ui-monospace, monospace;
+        font-size: 13px;
+        background: #252526;
+        color: #dcdcdc;
+        border: 1px solid #3c3c3c;
+        border-radius: 8px;
+        padding: 12px;
+        overflow: auto;
+        white-space: pre-wrap;
+        margin: 0;
+      }
       .row {
         display: flex;
         gap: 12px;
@@ -51,6 +98,13 @@
       button:hover {
         background: #3a3a3d;
       }
+      button.primary {
+        background: #007acc;
+        color: #fff;
+      }
+      button.primary:hover {
+        background: #005a9e;
+      }
       .hint {
         margin-top: 14px;
         font-size: 12px;
@@ -59,21 +113,45 @@
     </style>
   </head>
   <body>
-    <h3>Wireframe JSON invoeren</h3>
-    <textarea
-      id="jsonInput"
-      placeholder='[
-  { "component": "Hero", "props": { "Hero Title": "Welkom" } }
-]'
-    ></textarea>
-
-    <div class="row">
-      <button id="generate">Generate</button>
-      <button id="example">Voorbeeld</button>
-      <button id="clear">Verwijder blokken</button>
+    <div class="tabs">
+      <button class="tab active" data-tab="wireframe">
+        Wireframe Generator
+      </button>
+      <button class="tab" data-tab="keys">Component Keys</button>
     </div>
 
-    <div class="hint">Plak hier je JSON. Alleen de JSON wordt gebruikt.</div>
+    <div id="wireframe-content" class="tab-content active">
+      <h3>Wireframe JSON invoeren</h3>
+      <textarea
+        id="jsonInput"
+        placeholder='[
+  { "component": "Hero", "props": { "Hero Title": "Welkom" } }
+]'
+      ></textarea>
+
+      <div class="row">
+        <button id="generate">Generate</button>
+        <button id="example">Voorbeeld</button>
+        <button id="clear">Verwijder blokken</button>
+      </div>
+
+      <div class="hint">Plak hier je JSON. Alleen de JSON wordt gebruikt.</div>
+    </div>
+
+    <div id="keys-content" class="tab-content">
+      <h3>Component Keys Mapping</h3>
+      <pre id="mapping">Laden...</pre>
+
+      <div class="row">
+        <button id="toggle" class="primary">Whitelist: Aan</button>
+        <button id="refresh">Ververs</button>
+      </div>
+
+      <div class="hint">
+        Deze mapping wordt gebruikt voor de wireframe generator. Whitelist
+        filtert alleen de belangrijkste componenten.
+      </div>
+    </div>
 
     <script>
       const textarea = document.getElementById("jsonInput");
@@ -470,6 +548,64 @@
       document.getElementById("clear").onclick = () => {
         parent.postMessage({ pluginMessage: { type: "clear-page" } }, "*");
       };
+
+      // ============== Tab switching ==============
+      const tabs = document.querySelectorAll(".tab");
+      const tabContents = document.querySelectorAll(".tab-content");
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const targetTab = tab.dataset.tab;
+
+          // Update active tab
+          tabs.forEach((t) => t.classList.remove("active"));
+          tab.classList.add("active");
+
+          // Update active content
+          tabContents.forEach((content) => {
+            content.classList.remove("active");
+          });
+          document
+            .getElementById(targetTab + "-content")
+            .classList.add("active");
+
+          // Request mapping when switching to keys tab
+          if (targetTab === "keys") {
+            parent.postMessage(
+              { pluginMessage: { type: "request-mapping" } },
+              "*"
+            );
+          }
+        });
+      });
+
+      // ============== Component Keys Tab ==============
+      let whitelistOn = true;
+
+      document.getElementById("toggle").onclick = () => {
+        whitelistOn = !whitelistOn;
+        parent.postMessage(
+          { pluginMessage: { type: "toggle-whitelist", value: whitelistOn } },
+          "*"
+        );
+        document.getElementById("toggle").innerText =
+          "Whitelist: " + (whitelistOn ? "Aan" : "Uit");
+      };
+
+      document.getElementById("refresh").onclick = () => {
+        parent.postMessage({ pluginMessage: { type: "request-mapping" } }, "*");
+      };
+
+      // Receive mapping from plugin
+      onmessage = (event) => {
+        const msg = event.data.pluginMessage;
+        if (msg.type === "mapping") {
+          document.getElementById("mapping").innerText = msg.content;
+        }
+      };
+
+      // Request initial mapping when UI loads
+      parent.postMessage({ pluginMessage: { type: "request-mapping" } }, "*");
     </script>
   </body>
 </html>

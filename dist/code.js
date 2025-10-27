@@ -13,7 +13,71 @@ var mapping = {
   Projects: "5ad4994adbe1202718b8ba496054f8391187b24c", // Projects
 };
 
+// ============== whitelist & mapping builder ==============
+var whitelist = [
+  "Hero",
+  "Media Groot",
+  "Kolommen",
+  "Media Slider",
+  "Grid",
+  "Entry/Post Slider",
+  "Logo Slider",
+  "Call to Action",
+  "Footer",
+  "Projects",
+  "News",
+];
+
+var whitelistOn = true;
+
+async function buildMapping() {
+  // Load all pages first if using dynamic-page access
+  try {
+    await figma.loadAllPagesAsync();
+  } catch (e) {
+    // Ignore error if loadAllPagesAsync is not needed
+  }
+
+  var nodes = figma.root.findAll(function (n) {
+    return (n.type === "COMPONENT_SET" || n.type === "COMPONENT") && n.key;
+  });
+
+  var items = [];
+  for (var i = 0; i < nodes.length; i++) {
+    var n = nodes[i];
+    if (!whitelistOn || whitelist.includes(n.name)) {
+      items.push({ name: n.name, key: n.key });
+    }
+  }
+
+  if (items.length === 0) {
+    return "// Geen componenten gevonden (check whitelist-instellingen)";
+  }
+
+  items.sort(function (a, b) {
+    return a.name.localeCompare(b.name);
+  });
+
+  var out = "const mapping = {\n";
+  for (var j = 0; j < items.length; j++) {
+    var item = items[j];
+    var simple = item.name.replace(/\s+/g, "").replace(/\//g, "");
+    out += "  " + simple + ': "' + item.key + '", // ' + item.name + "\n";
+  }
+  out += "};";
+  return out;
+}
+
 figma.showUI(__html__, { width: 600, height: 500 });
+
+// Stuur initiële mapping naar UI (async)
+(async function () {
+  var initialMapping = await buildMapping();
+  figma.ui.postMessage({
+    type: "mapping",
+    content: initialMapping,
+  });
+})();
 
 // ============== helpers ==============
 function buildNameToIdFromInstance(instance) {
@@ -252,5 +316,24 @@ figma.ui.onmessage = async function (msg) {
     figma.notify(
       removed ? "Wireframes leeggemaakt" : "Geen Wireframes gevonden"
     );
+  }
+
+  if (msg.type === "toggle-whitelist") {
+    whitelistOn = msg.value;
+    buildMapping().then(function (content) {
+      figma.ui.postMessage({
+        type: "mapping",
+        content: content,
+      });
+    });
+  }
+
+  if (msg.type === "request-mapping") {
+    buildMapping().then(function (content) {
+      figma.ui.postMessage({
+        type: "mapping",
+        content: content,
+      });
+    });
   }
 };
