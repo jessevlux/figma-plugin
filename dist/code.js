@@ -179,9 +179,9 @@ function setPropsOnInstance(instance, props, compPath) {
   return 0;
 }
 
-function isTargetInstance(inst, targetName) {
+async function isTargetInstance(inst, targetName) {
   if (!inst || inst.type !== "INSTANCE") return false;
-  var mc = inst.mainComponent;
+  var mc = await inst.getMainComponentAsync();
   if (!mc) return false;
   if (mc.name === targetName) return true;
   var p = mc.parent;
@@ -189,24 +189,24 @@ function isTargetInstance(inst, targetName) {
   return false;
 }
 
-function findNestedInstances(rootInstance, targetName) {
+async function findNestedInstances(rootInstance, targetName) {
   var all = rootInstance.findAll(function (n) {
     return n.type === "INSTANCE";
   });
   var out = [];
   for (var i = 0; i < all.length; i++) {
-    if (isTargetInstance(all[i], targetName)) out.push(all[i]);
+    if (await isTargetInstance(all[i], targetName)) out.push(all[i]);
   }
   return out;
 }
 
-function applySpecToInstance(instance, spec, pathLabel) {
+async function applySpecToInstance(instance, spec, pathLabel) {
   if (spec.props) setPropsOnInstance(instance, spec.props, pathLabel);
 
   if (spec.children && spec.children.length) {
     for (var ci = 0; ci < spec.children.length; ci++) {
       var ch = spec.children[ci];
-      var matches = findNestedInstances(instance, ch.component || "");
+      var matches = await findNestedInstances(instance, ch.component || "");
       if (!matches.length) {
         console.warn('⚠️ Geen "' + ch.component + '" gevonden in ' + pathLabel);
         continue;
@@ -215,7 +215,7 @@ function applySpecToInstance(instance, spec, pathLabel) {
       if (typeof ch.index === "number") {
         var target = matches[ch.index];
         if (target)
-          applySpecToInstance(
+          await applySpecToInstance(
             target,
             ch,
             pathLabel + " → " + ch.component + "[" + ch.index + "]"
@@ -231,14 +231,14 @@ function applySpecToInstance(instance, spec, pathLabel) {
           );
       } else if (ch.index === "*" || ch.index === "all") {
         for (var mi = 0; mi < matches.length; mi++) {
-          applySpecToInstance(
+          await applySpecToInstance(
             matches[mi],
             ch,
             pathLabel + " → " + ch.component + "[" + mi + "]"
           );
         }
       } else {
-        applySpecToInstance(
+        await applySpecToInstance(
           matches[0],
           ch,
           pathLabel + " → " + ch.component + "[0]"
@@ -261,9 +261,6 @@ function createPageFrame(pageName, index) {
   // Zet elke pagina naast elkaar
   f.x = index * 1600; // horizontale offset per pagina
   f.y = 0;
-
-  // Zorg dat Figma dit frame niet probeert te alignen in iets anders
-  f.layoutAlign = "INHERIT";
 
   figma.currentPage.appendChild(f);
   return f;
@@ -310,7 +307,7 @@ figma.ui.onmessage = async function (msg) {
             var comp = await figma.importComponentByKeyAsync(key);
             var instance = comp.createInstance();
 
-            applySpecToInstance(
+            await applySpecToInstance(
               instance,
               {
                 props: block.props || {},
