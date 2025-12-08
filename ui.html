@@ -223,367 +223,912 @@
       const exampleData = [
         {
           page: "Home",
+          section: "homePage",
+          rationale:
+            "De homepage volgt de landing page formule: Hero met video trekt direct de aandacht, gevolgd door een agenda-sectie voor urgentie en FOMO. Daarna introduceren we de club met tekst en beeld, tonen we sfeerimpressies voor social proof, en sluiten we af met een werken-bij sectie en contactformulier voor conversie.",
           blocks: [
             {
               component: "Hero",
               props: {
-                "Has Title": true,
-                "Hero Title": "Welkom bij onze website",
-                "Has Description": true,
-                Description:
-                  "Wij bieden oplossingen die je bedrijf vooruit helpen.",
+                "Usp 1": "Unieke sfeer",
+                "Usp 2": "Top DJ's & live acts",
+                "Usp 3": "Elke week nieuwe events",
                 "Has Usps": true,
-                "Usp 1": "Betrouwbaar",
-                "Usp 2": "Innovatief",
-                "Usp 3": "Klantgericht",
+                "Has Title": true,
+                "Hero Title": "Welkom bij Test",
+                Description:
+                  "Dé club voor onvergetelijke avonden. Bekijk onze agenda en scoor je tickets.",
+                "Has Description": true,
                 "Has Button Primary": true,
                 "Has Button Secondary": true,
               },
               children: [
                 {
-                  component: "Button Primary",
                   props: {
                     "Property 1": "Default",
-                    "Text primary button": "Start nu",
+                    "Text primary button": "Bekijk tickets",
                   },
+                  component: "Button Primary",
                 },
                 {
-                  component: "Button Secondary",
                   props: {
                     "Property 1": "Default",
-                    "Text Secondary Button": "Lees meer",
+                    "Text Secondary Button": "Bekijk agenda",
                   },
+                  component: "Button Secondary",
+                },
+              ],
+            },
+            {
+              component: "Grid",
+              props: {
+                Title: "Aankomende events",
+                "Property 1": "Default",
+              },
+              blockType: "entrySection",
+              fetchesFrom: "events",
+              children: [
+                {
+                  index: 0,
+                  props: {
+                    Title: "Card 1",
+                    "Has button": false,
+                    Description: "Beschrijving",
+                  },
+                  children: [],
+                  component: "Inner Grid Card",
+                },
+                {
+                  index: 1,
+                  props: {
+                    Title: "Card 2",
+                    "Has button": false,
+                    Description: "Beschrijving",
+                  },
+                  children: [],
+                  component: "Inner Grid Card",
+                },
+                {
+                  index: 2,
+                  props: {
+                    Title: "Card 3",
+                    "Has button": false,
+                    Description: "Beschrijving",
+                  },
+                  children: [],
+                  component: "Inner Grid Card",
                 },
               ],
             },
             {
               component: "Kolommen",
-              props: { "Property 1": "Default" },
-              children: [
-                { component: "Media", props: { "Property 1": "Default" } },
-                {
-                  component: "Content Kolommen Block",
-                  props: { "Has Accordion": false, "Has Text": true },
-                  children: [
-                    {
-                      component: "Text Element",
-                      props: {
-                        "Has Primary Button": true,
-                        "Has Second Button": false,
-                        "Has List": true,
-                        "Has description": true,
-                        "Title of text Block": "Onze missie",
-                        Description: "Wij ondersteunen bedrijven bij groei.",
-                        "Usp Text 1": "Efficiënt",
-                        "Usp text 2": "Schaalbaar",
-                        "Usp Text 3": "Bewezen resultaten",
-                      },
-                      children: [
-                        {
-                          component: "Button Primary",
-                          props: {
-                            "Property 1": "Default",
-                            "Text primary button": "Ontdek meer",
-                          },
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              component: "MediaGroot",
-              props: { Title: "Een blik op ons werk" },
-            },
-            {
-              component: "MediaSlider",
-              props: { Title: "Cases & beelden" },
-            },
-            {
-              component: "Grid",
-              props: { "Property 1": "Variant2", Title: "Onze diensten" },
-              children: [
-                {
-                  component: "Inner Grid Card",
-                  index: 0,
-                  props: {
-                    Title: "Consultancy",
-                    Description: "Professioneel advies",
-                    "Has button": true,
-                  },
-                  children: [
-                    {
-                      component: "Button Primary",
-                      props: {
-                        "Property 1": "Default",
-                        "Text primary button": "Meer info",
-                      },
-                    },
-                  ],
-                },
-                {
-                  component: "Inner Grid Card",
-                  index: 1,
-                  props: {
-                    Title: "Implementatie",
-                    Description: "Snelle uitvoering",
-                    "Has button": false,
-                  },
-                },
-                {
-                  component: "Inner Grid Card",
-                  index: 2,
-                  props: {
-                    Title: "Training",
-                    Description: "Kennisdeling",
-                    "Has button": true,
-                  },
-                  children: [
-                    {
-                      component: "Button Primary",
-                      props: {
-                        "Property 1": "Default",
-                        "Text primary button": "Start training",
-                      },
-                    },
-                  ],
-                },
-                {
-                  component: "Inner Grid Card",
-                  index: 3,
-                  props: {
-                    Title: "Support",
-                    Description: "Altijd bereikbaar",
-                    "Has button": false,
-                  },
-                },
-              ],
-            },
-            {
-              component: "EntryPostSlider",
-              props: { Title: "Laatste nieuws" },
-              children: [
-                {
-                  component: "Entry Post Inner",
-                  index: 0,
-                  props: {
-                    "Has title": true,
-                    "Has description": true,
-                    "Has Category": true,
-                    "Has Popular": false,
-                    "Category Name": "Nieuws",
-                    Popular: "",
-                    "Title of this block": "Nieuwe samenwerking",
-                    Description: "Wij werken samen met een marktleider.",
-                  },
-                  children: [
-                    {
-                      component: "Button Primary",
-                      props: {
-                        "Property 1": "Default",
-                        "Text primary button": "Lees meer",
-                      },
-                    },
-                  ],
-                },
-                {
-                  component: "Entry Post Inner",
-                  index: 1,
-                  props: {
-                    "Has title": true,
-                    "Has description": true,
-                    "Has Category": true,
-                    "Has Popular": true,
-                    "Category Name": "Blog",
-                    Popular: "Hot",
-                    "Title of this block": "Tips & tricks",
-                    Description: "Handige tips voor ondernemers.",
-                  },
-                  children: [
-                    {
-                      component: "Button Primary",
-                      props: {
-                        "Property 1": "Default",
-                        "Text primary button": "Lees blog",
-                      },
-                    },
-                  ],
-                },
-                {
-                  component: "Entry Post Inner",
-                  index: 2,
-                  props: {
-                    "Has title": true,
-                    "Has description": true,
-                    "Has Category": true,
-                    "Has Popular": false,
-                    "Category Name": "Events",
-                    Popular: "",
-                    "Title of this block": "Komende events",
-                    Description: "Bekijk onze agenda.",
-                  },
-                  children: [
-                    {
-                      component: "Button Primary",
-                      props: {
-                        "Property 1": "Default",
-                        "Text primary button": "Bekijk events",
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              component: "LogoSlider",
-              props: { Title: "Vertrouwd door" },
-            },
-            {
-              component: "CalltoAction",
               props: {
-                "Has Title": true,
-                Title: "Klaar om te starten?",
-                "Has Description": true,
-                Description:
-                  "Neem contact op en ontdek wat we voor jou kunnen doen.",
-                "Has Usps": true,
-                "Usp 1": "Gratis intake",
-                "Usp 2": "Persoonlijk plan",
-                "Usp 3": "Snelle start",
-                "Has Button Primary": true,
-                "Has Button Secondary": false,
+                "Property 1": "Default",
               },
               children: [
                 {
-                  component: "Button Primary",
                   props: {
                     "Property 1": "Default",
-                    "Text primary button": "Contact opnemen",
                   },
+                  component: "Media",
+                },
+                {
+                  props: {
+                    "Has Text": true,
+                    "Has Accordion": true,
+                  },
+                  children: [
+                    {
+                      props: {
+                        "Has List": false,
+                        Description:
+                          "Al jaren zijn wij het kloppend hart van het nachtleven. Met een unieke mix van muziek, sfeer en gastvrijheid zorgen we voor avonden die je niet snel vergeet.",
+                        "Has description": true,
+                        "Has Second Button": false,
+                        "Has Primary Button": true,
+                        "Title of text Block": "Over onze club",
+                      },
+                      children: [
+                        {
+                          props: {
+                            "Property 1": "Default",
+                            "Text primary button": "Meer over ons",
+                          },
+                          component: "Button Primary",
+                        },
+                      ],
+                      component: "Text Element",
+                    },
+                    {
+                      props: {
+                        Text: "Accordion tekst",
+                        Title: "Accordion titel",
+                        "Text 2": "Tekst 2",
+                        "Text 3": "Tekst 3",
+                        "Text 4": "Tekst 4",
+                        "Has Title": true,
+                        "Text open item": "Open item tekst",
+                      },
+                      component: "Accordion list",
+                    },
+                  ],
+                  component: "Content Kolommen Block",
                 },
               ],
+            },
+            {
+              component: "MediaSlider",
+              props: {
+                Title: "Sfeerimpressie",
+              },
+            },
+            {
+              component: "Kolommen",
+              props: {
+                "Property 1": "Variant2",
+              },
+              children: [
+                {
+                  props: {
+                    "Property 1": "Variant2",
+                  },
+                  component: "Media",
+                },
+                {
+                  props: {
+                    "Has Text": true,
+                    "Has Accordion": false,
+                  },
+                  children: [
+                    {
+                      props: {
+                        "Has List": true,
+                        "Usp Text 1": "Flexibele werktijden",
+                        "Usp Text 3": "Goede vergoeding",
+                        "Usp text 2": "Leuk en jong team",
+                        Description:
+                          "Word onderdeel van ons team! Wij zoeken enthousiaste mensen die samen met ons onvergetelijke avonden willen creëren.",
+                        "Has description": true,
+                        "Has Second Button": false,
+                        "Has Primary Button": true,
+                        "Title of text Block": "Werken bij Test",
+                      },
+                      children: [
+                        {
+                          props: {
+                            "Property 1": "Default",
+                            "Text primary button": "Bekijk vacatures",
+                          },
+                          component: "Button Primary",
+                        },
+                      ],
+                      component: "Text Element",
+                    },
+                  ],
+                  component: "Content Kolommen Block",
+                },
+              ],
+            },
+            {
+              component: "Form",
+              props: {
+                "Field 3": "Je bericht",
+                "Has Name": true,
+                "Has Email": true,
+                "Has Field 1": false,
+                "Has Field 2": false,
+                "Has Field 3": true,
+                "Has Dropdown": false,
+                "Has Checkboxes": false,
+                "Has Date Timed": false,
+                "Has Phone number": true,
+                "Has Radio Buttons": false,
+              },
             },
             {
               component: "Footer",
               props: {
+                Link1A: "Home",
+                Link1B: "Agenda",
+                Link1C: "Werken bij",
+                Link1D: "Contact",
+                Link2A: "info@test.nl",
+                Link2B: "020-1234567",
+                Link2C: "Clubstraat 1, Amsterdam",
+                Link3A: "Instagram",
+                Link3B: "Facebook",
+                Link3C: "TikTok",
+                "Header 1": "Menu",
+                "Header 2": "Contact",
+                "Header 3": "Volg ons",
                 "Has Column 1": true,
-                "Header 1": "Bedrijf",
-                Link1A: "Over ons",
-                Link1B: "Team",
-                Link1C: "Vacatures",
-                Link1D: "",
-                Link1E: "",
-                Link1F: "",
-                Link1G: "",
                 "Has Column 2": true,
-                "Header 2": "Diensten",
-                Link2A: "Consultancy",
-                Link2B: "Training",
-                Link2C: "",
-                Link2D: "",
-                Link2E: "",
-                Link2F: "",
-                Link2G: "",
-                "Has Column 3": false,
-                "Header 3": "",
+                "Has Column 3": true,
                 "Has Column 4": false,
-                "Header 4": "",
                 "Has Nieuwsbrief": true,
               },
             },
           ],
         },
         {
-          page: "Over ons",
+          page: "Agenda overzicht",
+          section: "agendaOverview",
+          rationale:
+            "De agenda overzichtspagina toont alle events in een overzichtelijk grid. De Hero introduceert de pagina, gevolgd door een News-component die alle events toont met datum, categorie en beschrijving. Dit creëert urgentie en stimuleert ticketverkoop.",
           blocks: [
             {
-              component: "Projects",
+              component: "Hero",
               props: {
-                Title: "Onze projecten",
-                "Example category": "Technologie",
-                "Example header": "Innovatieplatform",
-                "Example description":
-                  "Een groot project waar we trots op zijn.",
+                "Has Usps": false,
+                "Has Title": true,
+                "Hero Title": "Onze Agenda",
+                Description:
+                  "Bekijk alle aankomende events en scoor je tickets voordat ze uitverkocht zijn.",
+                "Has Description": true,
+                "Has Button Primary": true,
+                "Has Button Secondary": false,
               },
-              children: Array.from({ length: 8 }, (_, i) => ({
-                component: "Project Card",
-                props: {
-                  Category: "Case " + (i + 1),
-                  "Project header": "Projecttitel " + (i + 1),
-                  Description: "Beschrijving van project " + (i + 1),
+              children: [
+                {
+                  props: {
+                    "Property 1": "Default",
+                    "Text primary button": "Direct naar tickets",
+                  },
+                  component: "Button Primary",
                 },
-              })),
+              ],
             },
             {
               component: "News",
               props: {
-                Title: "Laatste artikelen",
-                Description: "Lees het laatste nieuws en onze blogs.",
+                Title: "Alle events",
+                Description: "Filter op maand en vind jouw perfecte avond uit.",
               },
-              children: Array.from({ length: 9 }, (_, i) => ({
-                component: "News Card",
-                props: {
-                  Category: i % 2 === 0 ? "Nieuws" : "Blog",
-                  Date: "2025-09-" + String(i + 10).padStart(2, "0"),
-                  Description: "Artikel " + (i + 1) + " beschrijving.",
+              fetchesFrom: "events",
+              children: [
+                {
+                  props: {
+                    Date: "15 januari 2025",
+                    Category: "Feest",
+                    Description: "Nieuwjaarsparty met de beste DJ's",
+                  },
+                  component: "News Card",
                 },
-              })),
+                {
+                  props: {
+                    Date: "22 januari 2025",
+                    Category: "Live muziek",
+                    Description: "Live band night met lokale artiesten",
+                  },
+                  component: "News Card",
+                },
+                {
+                  props: {
+                    Date: "29 januari 2025",
+                    Category: "Special",
+                    Description: "Thema-avond: Back to the 90s",
+                  },
+                  component: "News Card",
+                },
+                {
+                  props: {
+                    Date: "5 februari 2025",
+                    Category: "Feest",
+                    Description: "Valentijnsparty voor singles",
+                  },
+                  component: "News Card",
+                },
+                {
+                  props: {
+                    Date: "12 februari 2025",
+                    Category: "Live muziek",
+                    Description: "Acoustic sessions",
+                  },
+                  component: "News Card",
+                },
+                {
+                  props: {
+                    Date: "19 februari 2025",
+                    Category: "Special",
+                    Description: "Carnaval editie",
+                  },
+                  component: "News Card",
+                },
+                {
+                  props: {
+                    Date: "26 februari 2025",
+                    Category: "Feest",
+                    Description: "House classics night",
+                  },
+                  component: "News Card",
+                },
+                {
+                  props: {
+                    Date: "5 maart 2025",
+                    Category: "Live muziek",
+                    Description: "Open mic night",
+                  },
+                  component: "News Card",
+                },
+                {
+                  props: {
+                    Date: "12 maart 2025",
+                    Category: "Special",
+                    Description: "Ladies night special",
+                  },
+                  component: "News Card",
+                },
+              ],
             },
             {
               component: "CalltoAction",
               props: {
-                "Has Title": true,
-                Title: "Neem contact op",
-                "Has Description": false,
-                Description: "",
+                Title: "Mis geen enkel event",
                 "Has Usps": false,
+                "Has Title": true,
+                Description:
+                  "Schrijf je in voor onze nieuwsbrief en ontvang als eerste updates over nieuwe events.",
+                "Has Description": true,
                 "Has Button Primary": true,
-                "Has Button Secondary": true,
+                "Has Button Secondary": false,
               },
               children: [
                 {
+                  props: {
+                    "Property 1": "Default",
+                    "Text primary button": "Aanmelden nieuwsbrief",
+                  },
                   component: "Button Primary",
-                  props: {
-                    "Property 1": "Default",
-                    "Text primary button": "Contact",
-                  },
-                },
-                {
-                  component: "Button Secondary",
-                  props: {
-                    "Property 1": "Default",
-                    "Text Secondary Button": "Meer info",
-                  },
                 },
               ],
             },
             {
               component: "Footer",
               props: {
+                Link1A: "Home",
+                Link1B: "Agenda",
+                Link1C: "Werken bij",
+                Link1D: "Contact",
+                Link2A: "info@test.nl",
+                Link2B: "020-1234567",
+                Link2C: "Clubstraat 1, Amsterdam",
+                Link3A: "Instagram",
+                Link3B: "Facebook",
+                Link3C: "TikTok",
+                "Header 1": "Menu",
+                "Header 2": "Contact",
+                "Header 3": "Volg ons",
                 "Has Column 1": true,
-                "Header 1": "Over ons",
-                Link1A: "Missie",
-                Link1B: "Visie",
-                Link1C: "",
-                Link1D: "",
-                Link1E: "",
-                Link1F: "",
-                Link1G: "",
-                "Has Column 2": false,
-                "Header 2": "",
+                "Has Column 2": true,
                 "Has Column 3": true,
-                "Header 3": "Contact",
-                Link3A: "Email",
-                Link3B: "Adres",
-                Link3C: "Telefoon",
-                Link3D: "",
-                Link3E: "",
-                Link3F: "",
-                Link3G: "",
                 "Has Column 4": false,
-                "Header 4": "",
-                "Has Nieuwsbrief": false,
+                "Has Nieuwsbrief": true,
+              },
+            },
+          ],
+        },
+        {
+          page: "Event detail",
+          section: "events",
+          rationale:
+            "De event detailpagina is een long-form content pagina met focus op conversie (ticketverkoop). De Detailpage component toont alle event-informatie, gevolgd door een sterke CTA voor tickets.",
+          blocks: [
+            {
+              component: "Detailpage",
+              props: {
+                "Paragraph 1":
+                  "Maak je klaar voor een onvergetelijke avond! Dit event belooft een mix van de beste muziek, geweldige sfeer en een nacht om nooit te vergeten.",
+                "Paragraph 2":
+                  "Onze line-up bestaat uit top DJ's en artiesten die je de hele nacht aan het dansen houden. De deuren openen om 22:00 en we gaan door tot de vroege uurtjes.",
+                "Paragraph 3":
+                  "Een avond vol energie, de beste beats en een publiek dat net zo enthousiast is als jij. Onze bar serveert de lekkerste cocktails en drankjes.",
+                "Paragraph 4":
+                  "Heb je vragen over dit event? Neem gerust contact met ons op via het onderstaande formulier of bel ons direct.",
+                "Has More News": true,
+                "Has News Header": true,
+                "Highlight Title": "Praktische informatie",
+                "Has More Projects": false,
+                "Paragraph 3 Title": "Wat kun je verwachten?",
+                "Has Project Header": false,
+                "Highlight Paragraph":
+                  "Tickets zijn beperkt beschikbaar. Zorg dat je op tijd bent om teleurstelling te voorkomen. Dresscode: smart casual. Minimumleeftijd: 18+.",
+                "Has Highlight Paragraph": true,
+              },
+            },
+            {
+              component: "CalltoAction",
+              props: {
+                Title: "Scoor je tickets nu",
+                "Usp 1": "Direct e-ticket",
+                "Usp 2": "Veilig betalen",
+                "Usp 3": "100% garantie",
+                "Has Usps": true,
+                "Has Title": true,
+                Description:
+                  "Wacht niet te lang, tickets zijn beperkt beschikbaar!",
+                "Has Description": true,
+                "Has Button Primary": true,
+                "Has Button Secondary": true,
+              },
+              children: [
+                {
+                  props: {
+                    "Property 1": "Default",
+                    "Text primary button": "Koop tickets",
+                  },
+                  component: "Button Primary",
+                },
+                {
+                  props: {
+                    "Property 1": "Default",
+                    "Text Secondary Button": "Stel een vraag",
+                  },
+                  component: "Button Secondary",
+                },
+              ],
+            },
+            {
+              component: "Footer",
+              props: {
+                Link1A: "Home",
+                Link1B: "Agenda",
+                Link1C: "Werken bij",
+                Link1D: "Contact",
+                Link2A: "info@test.nl",
+                Link2B: "020-1234567",
+                Link2C: "Clubstraat 1, Amsterdam",
+                Link3A: "Instagram",
+                Link3B: "Facebook",
+                Link3C: "TikTok",
+                "Header 1": "Menu",
+                "Header 2": "Contact",
+                "Header 3": "Volg ons",
+                "Has Column 1": true,
+                "Has Column 2": true,
+                "Has Column 3": true,
+                "Has Column 4": false,
+                "Has Nieuwsbrief": true,
+              },
+            },
+          ],
+        },
+        {
+          page: "Werken bij overzicht",
+          section: "werkenBijOverview",
+          rationale:
+            "Deze pagina overtuigt potentiële medewerkers met meerdere content blokken die de voordelen van werken bij de club benadrukken. Het vacature-overzicht in grid-formaat maakt het makkelijk om openstaande functies te bekijken.",
+          blocks: [
+            {
+              component: "Hero",
+              props: {
+                "Usp 1": "Flexibele uren",
+                "Usp 2": "Leuk team",
+                "Usp 3": "Goede vergoeding",
+                "Has Usps": true,
+                "Has Title": true,
+                "Hero Title": "Werken bij Test",
+                Description:
+                  "Word onderdeel van het beste team in het nachtleven. Wij zoeken enthousiaste collega's!",
+                "Has Description": true,
+                "Has Button Primary": true,
+                "Has Button Secondary": false,
+              },
+              children: [
+                {
+                  props: {
+                    "Property 1": "Default",
+                    "Text primary button": "Bekijk vacatures",
+                  },
+                  component: "Button Primary",
+                },
+              ],
+            },
+            {
+              component: "Kolommen",
+              props: {
+                "Property 1": "Default",
+              },
+              children: [
+                {
+                  props: {
+                    "Property 1": "Variant3",
+                  },
+                  component: "Media",
+                },
+                {
+                  props: {
+                    "Has Text": true,
+                    "Has Accordion": false,
+                  },
+                  children: [
+                    {
+                      props: {
+                        "Has List": true,
+                        "Usp Text 1": "Doorgroeimogelijkheden",
+                        "Usp Text 3": "Personeelskorting",
+                        "Usp text 2": "Gezellige teamuitjes",
+                        Description:
+                          "Bij Test draait alles om passie voor het nachtleven en gastvrijheid. Wij bieden een werkomgeving waar je jezelf kunt zijn en kunt groeien.",
+                        "Has description": true,
+                        "Has Second Button": false,
+                        "Has Primary Button": false,
+                        "Title of text Block": "Waarom werken bij ons?",
+                      },
+                      children: [],
+                      component: "Text Element",
+                    },
+                  ],
+                  component: "Content Kolommen Block",
+                },
+              ],
+            },
+            {
+              component: "Kolommen",
+              props: {
+                "Property 1": "Variant2",
+              },
+              children: [
+                {
+                  props: {
+                    "Property 1": "Default",
+                  },
+                  component: "Media",
+                },
+                {
+                  props: {
+                    "Has Text": false,
+                    "Has Accordion": true,
+                  },
+                  children: [
+                    {
+                      props: {
+                        Text: "Wat zijn de werktijden?",
+                        Title: "Veelgestelde vragen",
+                        "Text 2": "Hoe ziet het sollicitatieproces eruit?",
+                        "Text 3": "Is ervaring vereist?",
+                        "Text 4": "Wat is het salaris?",
+                        "Has Title": true,
+                        "Text open item":
+                          "Onze werktijden zijn flexibel en worden in overleg bepaald. We werken voornamelijk in de avond en nacht, van donderdag tot en met zondag.",
+                      },
+                      component: "Accordion list",
+                    },
+                  ],
+                  component: "Content Kolommen Block",
+                },
+              ],
+            },
+            {
+              component: "MediaSlider",
+              props: {
+                Title: "Ons team in actie",
+              },
+            },
+            {
+              component: "Grid",
+              props: {
+                Title: "Openstaande vacatures",
+                "Property 1": "Default",
+              },
+              blockType: "entrySection",
+              fetchesFrom: "vacatures",
+            },
+            {
+              component: "CalltoAction",
+              props: {
+                Title: "Geen passende vacature?",
+                "Has Usps": false,
+                "Has Title": true,
+                Description:
+                  "Stuur ons een open sollicitatie! We zijn altijd op zoek naar talent.",
+                "Has Description": true,
+                "Has Button Primary": true,
+                "Has Button Secondary": true,
+              },
+              children: [
+                {
+                  props: {
+                    "Property 1": "Default",
+                    "Text primary button": "Open sollicitatie",
+                  },
+                  component: "Button Primary",
+                },
+                {
+                  props: {
+                    "Property 1": "Default",
+                    "Text Secondary Button": "Neem contact op",
+                  },
+                  component: "Button Secondary",
+                },
+              ],
+            },
+            {
+              component: "Footer",
+              props: {
+                Link1A: "Home",
+                Link1B: "Agenda",
+                Link1C: "Werken bij",
+                Link1D: "Contact",
+                Link2A: "info@test.nl",
+                Link2B: "020-1234567",
+                Link2C: "Clubstraat 1, Amsterdam",
+                Link3A: "Instagram",
+                Link3B: "Facebook",
+                Link3C: "TikTok",
+                "Header 1": "Menu",
+                "Header 2": "Contact",
+                "Header 3": "Volg ons",
+                "Has Column 1": true,
+                "Has Column 2": true,
+                "Has Column 3": true,
+                "Has Column 4": false,
+                "Has Nieuwsbrief": true,
+              },
+            },
+          ],
+        },
+        {
+          page: "Vacature detail",
+          section: "vacatures",
+          rationale:
+            "De vacature detailpagina biedt uitgebreide informatie over de functie in long-form formaat. Het sollicitatieformulier met CV-upload staat centraal voor directe conversie.",
+          blocks: [
+            {
+              component: "Detailpage",
+              props: {
+                "Paragraph 1":
+                  "Ben jij op zoek naar een dynamische baan in het nachtleven? Dan is deze functie misschien wel perfect voor jou! Lees hieronder meer over wat we zoeken.",
+                "Paragraph 2":
+                  "Als onderdeel van ons team werk je in een energieke omgeving waar geen dag hetzelfde is. Je krijgt de kans om te groeien en jezelf te ontwikkelen.",
+                "Paragraph 3":
+                  "Enthousiasme, betrouwbaarheid en een passie voor gastvrijheid. Ervaring is een plus, maar geen vereiste - wij leiden je graag op!",
+                "Paragraph 4":
+                  "Interesse? Solliciteer direct via onderstaand formulier of neem contact met ons op voor meer informatie.",
+                "Has More News": false,
+                "Has News Header": false,
+                "Highlight Title": "Wat bieden wij?",
+                "Has More Projects": true,
+                "Paragraph 3 Title": "Wat verwachten wij?",
+                "Has Project Header": true,
+                "Highlight Paragraph":
+                  "Competitief salaris, flexibele werktijden, een fantastisch team en doorgroeimogelijkheden. Plus: personeelskorting en toegang tot al onze events!",
+                "Has Highlight Paragraph": true,
+              },
+            },
+            {
+              component: "CalltoAction",
+              props: {
+                Title: "Direct solliciteren",
+                "Usp 1": "Reactie binnen 3 dagen",
+                "Usp 2": "Persoonlijk gesprek",
+                "Usp 3": "Snel aan de slag",
+                "Has Usps": true,
+                "Has Title": true,
+                Description: "Bel ons op 020-1234567 of mail naar jobs@test.nl",
+                "Has Description": true,
+                "Has Button Primary": true,
+                "Has Button Secondary": true,
+              },
+              children: [
+                {
+                  props: {
+                    "Property 1": "Default",
+                    "Text primary button": "Solliciteer nu",
+                  },
+                  component: "Button Primary",
+                },
+                {
+                  props: {
+                    "Property 1": "Default",
+                    "Text Secondary Button": "Bel ons",
+                  },
+                  component: "Button Secondary",
+                },
+              ],
+            },
+            {
+              component: "Footer",
+              props: {
+                Link1A: "Home",
+                Link1B: "Agenda",
+                Link1C: "Werken bij",
+                Link1D: "Contact",
+                Link2A: "info@test.nl",
+                Link2B: "020-1234567",
+                Link2C: "Clubstraat 1, Amsterdam",
+                Link3A: "Instagram",
+                Link3B: "Facebook",
+                Link3C: "TikTok",
+                "Header 1": "Menu",
+                "Header 2": "Contact",
+                "Header 3": "Volg ons",
+                "Has Column 1": true,
+                "Has Column 2": true,
+                "Has Column 3": true,
+                "Has Column 4": false,
+                "Has Nieuwsbrief": true,
+              },
+            },
+          ],
+        },
+        {
+          page: "Contact",
+          section: "contact",
+          rationale:
+            "De contactpagina combineert alle contactmogelijkheden: een duidelijk formulier, locatie-informatie en social media links. De korte intro tekst maakt de pagina persoonlijk en uitnodigend.",
+          blocks: [
+            {
+              component: "Hero",
+              props: {
+                "Usp 1": "Snelle reactie",
+                "Usp 2": "Persoonlijk contact",
+                "Usp 3": "Altijd bereikbaar",
+                "Has Usps": true,
+                "Has Title": true,
+                "Hero Title": "Neem contact op",
+                Description:
+                  "Heb je een vraag, wil je een tafel reserveren of heb je andere opmerkingen? We horen graag van je!",
+                "Has Description": true,
+                "Has Button Primary": false,
+                "Has Button Secondary": false,
+              },
+            },
+            {
+              component: "Kolommen",
+              props: {
+                "Property 1": "Default",
+              },
+              children: [
+                {
+                  props: {
+                    "Property 1": "Default",
+                  },
+                  component: "Media",
+                },
+                {
+                  props: {
+                    "Has Text": true,
+                    "Has Accordion": false,
+                  },
+                  children: [
+                    {
+                      props: {
+                        "Has List": true,
+                        "Usp Text 1": "Clubstraat 1, Amsterdam",
+                        "Usp Text 3": "info@test.nl",
+                        "Usp text 2": "020-1234567",
+                        Description:
+                          "Je kunt ons bereiken via onderstaande contactgegevens of kom langs in onze club.",
+                        "Has description": true,
+                        "Has Second Button": false,
+                        "Has Primary Button": false,
+                        "Title of text Block": "Onze gegevens",
+                      },
+                      children: [],
+                      component: "Text Element",
+                    },
+                  ],
+                  component: "Content Kolommen Block",
+                },
+              ],
+            },
+            {
+              component: "Contactform",
+              props: {},
+            },
+            {
+              component: "Grid",
+              props: {
+                Title: "Volg ons op social media",
+                "Property 1": "Default",
+              },
+              children: [
+                {
+                  index: 0,
+                  props: {
+                    Title: "Instagram",
+                    "Has button": true,
+                    Description: "Bekijk onze laatste foto's en stories",
+                  },
+                  children: [
+                    {
+                      props: {
+                        "Property 1": "Default",
+                        "Text primary button": "Volg ons",
+                      },
+                      component: "Button Primary",
+                    },
+                  ],
+                  component: "Inner Grid Card",
+                },
+                {
+                  index: 1,
+                  props: {
+                    Title: "Facebook",
+                    "Has button": true,
+                    Description: "Blijf op de hoogte van events en nieuws",
+                  },
+                  children: [
+                    {
+                      props: {
+                        "Property 1": "Default",
+                        "Text primary button": "Like ons",
+                      },
+                      component: "Button Primary",
+                    },
+                  ],
+                  component: "Inner Grid Card",
+                },
+                {
+                  index: 2,
+                  props: {
+                    Title: "TikTok",
+                    "Has button": true,
+                    Description: "Bekijk onze video's en behind the scenes",
+                  },
+                  children: [
+                    {
+                      props: {
+                        "Property 1": "Default",
+                        "Text primary button": "Volg ons",
+                      },
+                      component: "Button Primary",
+                    },
+                  ],
+                  component: "Inner Grid Card",
+                },
+              ],
+            },
+            {
+              component: "CalltoAction",
+              props: {
+                Title: "Kom langs!",
+                "Has Usps": false,
+                "Has Title": true,
+                Description:
+                  "We verwelkomen je graag in onze club. Check onze agenda voor de volgende events.",
+                "Has Description": true,
+                "Has Button Primary": true,
+                "Has Button Secondary": true,
+              },
+              children: [
+                {
+                  props: {
+                    "Property 1": "Default",
+                    "Text primary button": "Bekijk agenda",
+                  },
+                  component: "Button Primary",
+                },
+                {
+                  props: {
+                    "Property 1": "Default",
+                    "Text Secondary Button": "Route plannen",
+                  },
+                  component: "Button Secondary",
+                },
+              ],
+            },
+            {
+              component: "Footer",
+              props: {
+                Link1A: "Home",
+                Link1B: "Agenda",
+                Link1C: "Werken bij",
+                Link1D: "Contact",
+                Link2A: "info@test.nl",
+                Link2B: "020-1234567",
+                Link2C: "Clubstraat 1, Amsterdam",
+                Link3A: "Instagram",
+                Link3B: "Facebook",
+                Link3C: "TikTok",
+                "Header 1": "Menu",
+                "Header 2": "Contact",
+                "Header 3": "Volg ons",
+                "Has Column 1": true,
+                "Has Column 2": true,
+                "Has Column 3": true,
+                "Has Column 4": false,
+                "Has Nieuwsbrief": true,
               },
             },
           ],

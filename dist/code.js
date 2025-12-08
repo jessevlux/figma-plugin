@@ -11,6 +11,9 @@ var mapping = {
   MediaSlider: "ae3a3d3df675839c6193581bec299f5521710df9", // Media Slider
   News: "29dea06a3f72180819b9963a0d9dafb5e7ed2f7f", // News
   Projects: "5ad4994adbe1202718b8ba496054f8391187b24c", // Projects
+  Contactform: "8fb8a15815c033a84fe8554c3069ba0258e89c5b", // Contactform
+  Detailpage: "b2ed86a2949429e68ce1b2d926c5af05c784b011", // Detail page
+  Form: "79fd937c6fa65c5216f8b5ea8ba2ed5aef93495a", // Form
 };
 
 // ============== whitelist & mapping builder (voor library bestand) ==============
@@ -277,10 +280,14 @@ figma.ui.onmessage = async function (msg) {
       var invalid = [];
       var created = 0;
 
-      var pages =
-        Array.isArray(parsed) && parsed[0] && parsed[0].page
-          ? parsed
-          : [{ page: "Default", blocks: parsed }];
+      var pages;
+      if (parsed.pages && Array.isArray(parsed.pages)) {
+        pages = parsed.pages;
+      } else if (Array.isArray(parsed) && parsed[0] && parsed[0].page) {
+        pages = parsed;
+      } else {
+        pages = [{ page: "Default", blocks: parsed }];
+      }
 
       for (var pi = 0; pi < pages.length; pi++) {
         var pageSpec = pages[pi];
