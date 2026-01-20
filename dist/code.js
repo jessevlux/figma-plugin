@@ -9,11 +9,12 @@ var mapping = {
   LogoSlider: "0d566f76593314a890563894e9a518e7802c1501", // Logo Slider
   MediaGroot: "7f0894e5f2637427637add56872aa7fdd599c243", // Media Groot
   MediaSlider: "ae3a3d3df675839c6193581bec299f5521710df9", // Media Slider
-  News: "29dea06a3f72180819b9963a0d9dafb5e7ed2f7f", // News
-  Projects: "5ad4994adbe1202718b8ba496054f8391187b24c", // Projects
+  Grid3Col: "29dea06a3f72180819b9963a0d9dafb5e7ed2f7f", // Grid3Col
+  Grid2Col: "5ad4994adbe1202718b8ba496054f8391187b24c", // Grid2Col
   Contactform: "8fb8a15815c033a84fe8554c3069ba0258e89c5b", // Contactform
-  Detailpage: "b2ed86a2949429e68ce1b2d926c5af05c784b011", // Detail page
+  LongFormContent: "b2ed86a2949429e68ce1b2d926c5af05c784b011", // Long Form Content
   Form: "79fd937c6fa65c5216f8b5ea8ba2ed5aef93495a", // Form
+  Reviews: "827bb949383fbac829d2a964bdd1ebfde3c20421", // Reviews
 };
 
 // ============== whitelist & mapping builder (voor library bestand) ==============
@@ -171,7 +172,7 @@ function setPropsOnInstance(instance, props, compPath) {
       if (nameToId[t]) toSet[nameToId[t]] = props[key];
       else
         console.warn(
-          '⚠️ Geen match voor prop "' + key + '" in "' + compPath + '"'
+          '⚠️ Geen match voor prop "' + key + '" in "' + compPath + '"',
         );
     }
   }
@@ -221,7 +222,7 @@ async function applySpecToInstance(instance, spec, pathLabel) {
           await applySpecToInstance(
             target,
             ch,
-            pathLabel + " → " + ch.component + "[" + ch.index + "]"
+            pathLabel + " → " + ch.component + "[" + ch.index + "]",
           );
         else
           console.warn(
@@ -230,21 +231,21 @@ async function applySpecToInstance(instance, spec, pathLabel) {
               ' buiten bereik voor "' +
               ch.component +
               '" in ' +
-              pathLabel
+              pathLabel,
           );
       } else if (ch.index === "*" || ch.index === "all") {
         for (var mi = 0; mi < matches.length; mi++) {
           await applySpecToInstance(
             matches[mi],
             ch,
-            pathLabel + " → " + ch.component + "[" + mi + "]"
+            pathLabel + " → " + ch.component + "[" + mi + "]",
           );
         }
       } else {
         await applySpecToInstance(
           matches[0],
           ch,
-          pathLabel + " → " + ch.component + "[0]"
+          pathLabel + " → " + ch.component + "[0]",
         );
       }
     }
@@ -302,7 +303,7 @@ figma.ui.onmessage = async function (msg) {
             'DEBUG → JSON component: "' +
               compName +
               '", mapping key: ' +
-              (key || "NIET GEVONDEN")
+              (key || "NIET GEVONDEN"),
           );
 
           if (!key) {
@@ -321,13 +322,13 @@ figma.ui.onmessage = async function (msg) {
                 children: block.children || [],
                 component: compName,
               },
-              compName
+              compName,
             );
 
             pageFrame.appendChild(instance);
             created++;
             console.log(
-              '✅ Component "' + compName + '" succesvol geïmporteerd.'
+              '✅ Component "' + compName + '" succesvol geïmporteerd.',
             );
           } catch (err) {
             console.error(
@@ -336,7 +337,7 @@ figma.ui.onmessage = async function (msg) {
                 '" met key "' +
                 key +
                 '" NIET laden.',
-              err
+              err,
             );
             invalid.push(compName);
           }
@@ -363,7 +364,7 @@ figma.ui.onmessage = async function (msg) {
             created +
             " blok(ken) in " +
             pages.length +
-            " pagina('s)."
+            " pagina('s).",
         );
       }
     } catch (e) {
@@ -383,7 +384,7 @@ figma.ui.onmessage = async function (msg) {
       }
     }
     figma.notify(
-      removed ? "Wireframes leeggemaakt" : "Geen Wireframes gevonden"
+      removed ? "Wireframes leeggemaakt" : "Geen Wireframes gevonden",
     );
   }
 

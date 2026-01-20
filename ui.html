@@ -1,11 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="nl">
   <head>
     <meta charset="utf-8" />
     <title>Wireframe Plugin</title>
     <style>
       body {
-        font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial;
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          Segoe UI,
+          Roboto,
+          Arial;
         margin: 0;
         padding: 0;
         background: #1e1e1e;
@@ -159,7 +164,9 @@
       <button class="tab active" data-tab="wireframe">
         Wireframe Generator
       </button>
-      <button class="tab" data-tab="keys">Component Keys</button>
+      <button class="tab" data-tab="keys" style="display: none">
+        Component Keys
+      </button>
     </div>
 
     <div id="wireframe-content" class="tab-content active">
@@ -219,6 +226,16 @@
 
     <script>
       const textarea = document.getElementById("jsonInput");
+
+      // Reveal keys tab on magic command
+      textarea.addEventListener("input", (e) => {
+        if (e.target.value.trim() === "/keys") {
+          const keysTab = document.querySelector('.tab[data-tab="keys"]');
+          if (keysTab) {
+            keysTab.style.display = ""; // Removes 'display: none' to revert to CSS rule
+          }
+        }
+      });
 
       const exampleData = [
         {
@@ -1140,13 +1157,13 @@
         if (!raw) {
           parent.postMessage(
             { pluginMessage: { type: "generate-wireframe", json: "[]" } },
-            "*"
+            "*",
           );
           return;
         }
         parent.postMessage(
           { pluginMessage: { type: "generate-wireframe", json: raw } },
-          "*"
+          "*",
         );
       };
 
@@ -1182,7 +1199,7 @@
           if (targetTab === "keys") {
             parent.postMessage(
               { pluginMessage: { type: "request-mapping" } },
-              "*"
+              "*",
             );
           }
         });
@@ -1223,7 +1240,7 @@
                   enabled: checkbox.checked,
                 },
               },
-              "*"
+              "*",
             );
           });
 
